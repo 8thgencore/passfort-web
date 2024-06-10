@@ -1,25 +1,30 @@
 <template>
   <v-app>
-    <Navbar />
-    <v-main class="mt-8 px-8">
-      <Description />
+    <!-- Navbar -->
+    <MainNavbar />
+
+    <!-- Content -->
+    <v-main>
+      <router-view />
     </v-main>
+
+    <!-- Notification container -->
+    <notifications />
   </v-app>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Navbar from '@/app/components/layout/Navbar.vue'
-import Description from '@/app/components/Description.vue'
+import MainNavbar from './components/layout/MainNavbar.vue'
 
 export default defineComponent({
+  name: 'App',
   components: {
-    Navbar,
-    Description
+    MainNavbar
   }
 })
 </script>
 
-<style scoped>
-/* Add Tailwind styles here */
+<style>
+@import './assets/base.css';
 </style>
