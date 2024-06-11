@@ -9,11 +9,15 @@
 </template>
 
 <script lang="ts">
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, computed, inject } from 'vue'
 
 export default defineComponent({
   setup() {
     const authRepository = inject<IAuthRepository>('authRepository')
+    if (!authRepository) {
+      throw new Error('authRepository is not provided')
+    }
     const authStore = inject<IAuthStore>('authStore')
 
     const isAuthenticated = computed(() => !!authStore.token)

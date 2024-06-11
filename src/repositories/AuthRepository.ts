@@ -1,5 +1,5 @@
-import { IAuthRepository } from './interfaces/IAuthRepository'
 import { IAuthClient } from '@/services/auth/IAuthClient'
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { IAuthStore } from '@/store/modules/auth/interfaces/iAuthStore'
 
 export class AuthRepository implements IAuthRepository {

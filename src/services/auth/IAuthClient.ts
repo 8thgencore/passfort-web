@@ -1,5 +1,5 @@
-import { LoginRequest, RegisterRequest } from '../models/requestModels'
-import { AuthResponse } from '../models/responseModels'
+import { LoginRequest, RegisterRequest } from '@/services/models/requestModels'
+import { AuthResponse } from '@/services/models/responseModels'
 
 export interface IAuthClient {
   login(request: LoginRequest): Promise<AuthResponse>

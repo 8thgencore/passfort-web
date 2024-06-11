@@ -1,7 +1,7 @@
-import { IAuthClient } from './iAuthClient'
-import { IHttpClient } from '../http/iHttpClient'
-import { LoginRequest, RegisterRequest } from '../models/requestModels'
-import { AuthResponse } from '../models/responseModels'
+import { IAuthClient } from '@/services/auth/IAuthClient'
+import { IHttpClient } from '@/services/http/IHttpClient'
+import { LoginRequest, RegisterRequest } from '@/services/models/requestModels'
+import { AuthResponse } from '@/services/models/responseModels'
 
 export class AuthClient implements IAuthClient {
   constructor(private httpClient: IHttpClient) {}

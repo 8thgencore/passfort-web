@@ -1,5 +1,5 @@
-import { User } from '../../domain/user';
+import { User } from '@/domain/user'
 
 export interface IUserRepository {
-  fetchUsers(): Promise<User[]>;
+  fetchUsers(): Promise<User[]>
 }

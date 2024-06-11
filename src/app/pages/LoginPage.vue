@@ -11,17 +11,18 @@
 <script lang="ts">
 import { defineComponent, ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import { useNotification } from '@kyvg/vue3-notification'
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 
 export default defineComponent({
   setup() {
     const authRepository = inject<IAuthRepository>('authRepository')
+    if (!authRepository) {
+      throw new Error('authRepository is not provided')
+    }
 
     const email = ref('')
     const password = ref('')
     const router = useRouter()
-
-    const { notify } = useNotification()
 
     const onSubmit = async () => {
       try {
@@ -29,12 +30,6 @@ export default defineComponent({
         router.push('/')
       } catch (error) {
         console.error('Login failed', error)
-
-        notify({
-          type: 'error',
-          title: 'Login Error',
-          text: 'Failed to login. Please check your credentials and try again.'
-        })
       }
     }
 

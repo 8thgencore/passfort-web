@@ -10,12 +10,16 @@
 </template>
 
 <script lang="ts">
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
   setup() {
     const authRepository = inject<IAuthRepository>('authRepository')
+    if (!authRepository) {
+      throw new Error('authRepository is not provided')
+    }
 
     const email = ref('')
     const name = ref('')

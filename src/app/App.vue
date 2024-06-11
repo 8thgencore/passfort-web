@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import MainNavbar from './components/layout/MainNavbar.vue'
+import MainNavbar from '@/app/components/layout/MainNavbar.vue'
 
 export default defineComponent({
   name: 'App',

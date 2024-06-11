@@ -1,11 +1,19 @@
-import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import { IHttpClient } from './iHttpClient'
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios'
+import { IHttpClient } from '@/services/http/IHttpClient'
 
 export class HttpClient implements IHttpClient {
-  private instance: AxiosInstance
+  private axiosInstance: AxiosInstance
 
-  constructor(baseURL: string) {
-    this.instance = axios.create({ baseURL })
+  constructor(baseURL: string, config?: AxiosRequestConfig) {
+    this.axiosInstance = axios.create({
+      baseURL,
+      timeout: 10000,
+      ...config
+    })
+  }
+
+  get instance(): AxiosInstance {
+    return this.axiosInstance
   }
 
   async get<T>(url: string, params?: any): Promise<T> {
