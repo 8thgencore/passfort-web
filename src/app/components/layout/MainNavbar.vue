@@ -18,12 +18,12 @@ export default defineComponent({
     if (!authRepository) {
       throw new Error('authRepository is not provided')
     }
-    const authStore = inject<IAuthStore>('authStore')
 
-    const isAuthenticated = computed(() => !!authStore.token)
+    const isAuthenticated = computed(() => authRepository.isAuthenticated())
 
     const logout = async () => {
       await authRepository.logout()
+      window.location.reload()
     }
 
     return { isAuthenticated, logout }

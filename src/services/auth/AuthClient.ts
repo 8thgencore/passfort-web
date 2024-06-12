@@ -1,13 +1,14 @@
 import { IAuthClient } from '@/services/auth/IAuthClient'
 import { IHttpClient } from '@/services/http/IHttpClient'
 import { LoginRequest, RegisterRequest } from '@/services/models/requestModels'
-import { AuthResponse } from '@/services/models/responseModels'
+import { Response, AuthResponse } from '@/services/models/responseModels'
 
 export class AuthClient implements IAuthClient {
   constructor(private httpClient: IHttpClient) {}
 
   async login(request: LoginRequest): Promise<AuthResponse> {
-    return this.httpClient.post<AuthResponse>('/auth/login', request)
+    const response = await this.httpClient.post<Response<AuthResponse>>('/auth/login', request)
+    return response.data
   }
 
   async register(request: RegisterRequest): Promise<void> {
@@ -19,6 +20,7 @@ export class AuthClient implements IAuthClient {
   }
 
   async refreshToken(): Promise<AuthResponse> {
-    return this.httpClient.post<AuthResponse>('/auth/refresh-token', {})
+    const response = await this.httpClient.post<Response<AuthResponse>>('/auth/refresh-token', {})
+    return response.data
   }
 }
