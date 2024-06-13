@@ -3,6 +3,8 @@ export interface IAuthRepository {
   register(email: string, name: string, password: string): Promise<void>
   logout(): Promise<void>
   refreshToken(): Promise<string>
+  confirmRegistration(email: string, otp: string): Promise<void>
+  resendOtp(email: string): Promise<void>
   isAuthenticated(): boolean
   getAccessToken(): string
   getRefreshToken(): string

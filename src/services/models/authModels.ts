@@ -32,3 +32,12 @@ export interface ChangePasswordRequest {
   old_password: string
   new_password: string
 }
+
+export interface ConfirmRegistrationRequest {
+  email: string
+  otp: string
+}
+
+export interface ResendOtpRequest {
+  email: string
+}

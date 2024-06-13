@@ -36,6 +36,14 @@ export class AuthRepository implements IAuthRepository {
     return newAccessToken
   }
 
+  async confirmRegistration(email: string, otp: string): Promise<void> {
+    await this.authClient.confirmRegistration({ email, otp })
+  }
+
+  async resendOtp(email: string): Promise<void> {
+    await this.authClient.resendOtp({ email })
+  }
+
   isAuthenticated(): boolean {
     return this.authStore.isAuthenticated()
   }

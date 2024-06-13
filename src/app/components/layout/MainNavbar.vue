@@ -2,9 +2,9 @@
   <v-app-bar app>
     <v-toolbar-title @click="goToHome">Парольный менеджер</v-toolbar-title>
     <v-spacer></v-spacer>
-    <v-btn v-if="!isAuthenticated" to="/register" text>Register</v-btn>
-    <v-btn v-if="isAuthenticated" @click="logout" text>Logout</v-btn>
-    <v-btn v-if="!isAuthenticated" to="/login" text>Login</v-btn>
+    <v-btn v-if="!isAuthenticated" to="/register" boolean>Register</v-btn>
+    <v-btn v-if="isAuthenticated" @click="logout" boolean>Logout</v-btn>
+    <v-btn v-if="!isAuthenticated" to="/login" boolean>Login</v-btn>
   </v-app-bar>
 </template>
 
@@ -37,5 +37,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Добавьте стиль по вашему желанию */
+/* Add your styles here */
 </style>

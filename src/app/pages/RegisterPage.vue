@@ -6,6 +6,8 @@
       <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
       <v-btn type="submit" color="primary">Register</v-btn>
     </v-form>
+    <!-- Hover button to redirect to ResendOtp page -->
+    <v-btn @click="goToResendOtp" color="secondary" class="mt-2" outlined>Resend OTP</v-btn>
   </v-container>
 </template>
 
@@ -29,17 +31,21 @@ export default defineComponent({
     const onSubmit = async () => {
       try {
         await authRepository.register(email.value, name.value, password.value)
-        router.push('/login')
+        router.push({ name: 'confirm-registration', query: { email: email.value } })
       } catch (error) {
         console.error('Registration failed', error)
       }
     }
 
-    return { email, name, password, onSubmit }
+    const goToResendOtp = () => {
+      router.push('/resend-otp')
+    }
+
+    return { email, name, password, onSubmit, goToResendOtp }
   }
 })
 </script>
 
 <style scoped>
-/* Добавьте стиль по вашему желанию */
+/* Add custom styles if necessary */
 </style>
