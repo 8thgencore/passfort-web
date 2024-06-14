@@ -1,10 +1,13 @@
 import { IAuthClient } from '@/services/auth/IAuthClient'
 import { IHttpClient } from '@/services/http/IHttpClient'
 import {
+  ChangePasswordRequest,
   ConfirmRegistrationRequest,
+  ForgotPasswordRequest,
   LoginRequest,
   RegisterRequest,
-  ResendOtpRequest
+  ResendOtpRequest,
+  ResetPasswordRequest
 } from '@/services/models/requestModels'
 import { Response, AuthResponse } from '@/services/models/responseModels'
 
@@ -35,5 +38,17 @@ export class AuthClient implements IAuthClient {
 
   async resendOtp(data: ResendOtpRequest): Promise<void> {
     await this.httpClient.post('/auth/register/resend-otp', data)
+  }
+
+  async changePassword(data: ChangePasswordRequest): Promise<void> {
+    await this.httpClient.post('/auth/change-password', data)
+  }
+
+  async forgotPassword(data: ForgotPasswordRequest): Promise<void> {
+    await this.httpClient.post('/auth/forgot-password', data)
+  }
+
+  async resetPassword(data: ResetPasswordRequest): Promise<void> {
+    await this.httpClient.post('/auth/reset-password', data)
   }
 }

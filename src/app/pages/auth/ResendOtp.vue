@@ -9,27 +9,26 @@
 
 <script lang="ts">
 import { defineComponent, ref, inject } from 'vue'
-import { useNotification } from '@kyvg/vue3-notification'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { useRouter } from 'vue-router'
+import { Routes } from '@/app/router'
+import { showSuccessNotification } from '@/utils/notificationService'
 
 export default defineComponent({
   name: 'ResendOtp',
   setup() {
     const email = ref('')
-    const { notify } = useNotification()
     const authRepository = inject<IAuthRepository>('authRepository')
-    const router = useRouter()
-
     if (!authRepository) {
       throw new Error('authRepository is not provided')
     }
+    const router = useRouter()
 
     const resendOtp = async () => {
       try {
         await authRepository.resendOtp(email.value)
-        notify({ type: 'success', title: 'Success', text: 'OTP code sent successfully' })
-        router.push({ name: 'confirm-registration', query: { email: email.value } })
+        showSuccessNotification('Success', 'OTP code sent successfully')
+        router.push({ name: Routes.ConfirmRegistration, query: { email: email.value } })
       } catch (error) {
         //
       }

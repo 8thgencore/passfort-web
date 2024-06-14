@@ -8,6 +8,7 @@
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -21,7 +22,7 @@ export default defineComponent({
     const logout = async () => {
       try {
         await authRepository.logout()
-        router.push('/login')
+        router.push(Routes.Home)
       } catch (error) {
         console.error('Logout failed', error)
       }

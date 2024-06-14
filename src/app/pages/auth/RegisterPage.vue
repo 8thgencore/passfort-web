@@ -2,16 +2,19 @@
   <v-container>
     <v-form @submit.prevent="onSubmit">
       <v-text-field v-model="email" label="Email" required></v-text-field>
+      <v-text-field v-model="name" label="Name" required></v-text-field>
       <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
-      <v-btn type="submit" color="primary">Login</v-btn>
+      <v-btn type="submit" color="primary">Register</v-btn>
     </v-form>
+    <v-btn @click="goToResendOtp" color="secondary" class="mt-2" outlined>Resend OTP</v-btn>
   </v-container>
 </template>
 
 <script lang="ts">
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -21,23 +24,28 @@ export default defineComponent({
     }
 
     const email = ref('')
+    const name = ref('')
     const password = ref('')
     const router = useRouter()
 
     const onSubmit = async () => {
       try {
-        await authRepository.login(email.value, password.value)
-        router.push('/')
+        await authRepository.register(email.value, name.value, password.value)
+        router.push({ name: Routes.ConfirmRegistration, query: { email: email.value } })
       } catch (error) {
-        console.error('Login failed', error)
+        console.error('Registration failed', error)
       }
     }
 
-    return { email, password, onSubmit }
+    const goToResendOtp = () => {
+      router.push(Routes.ResendOtp)
+    }
+
+    return { email, name, password, onSubmit, goToResendOtp }
   }
 })
 </script>
 
 <style scoped>
-/* Добавьте стиль по вашему желанию */
+/* Add custom styles if necessary */
 </style>

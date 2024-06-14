@@ -1,3 +1,4 @@
+import { UserInfoResponse } from '@/services/models/userModels'
 import { BaseEntity } from './common/baseEntity'
 import { EntityId } from './common/entityId'
 
@@ -18,20 +19,15 @@ export class User extends BaseEntity {
     super(id)
   }
 
-  changeRole(newRole: UserRoleEnum): void {
-    // Example of business logic
-    if (newRole === UserRoleEnum.AdminRole && this.role !== UserRoleEnum.AdminRole) {
-      // Perform some additional checks or actions
-    }
-    // this.role = newRole;
+  // Static method to convert from DTO
+  static convertFromDto(dto: UserInfoResponse): User {
+    return new User(
+      new EntityId(dto.id),
+      dto.email,
+      dto.name,
+      UserRoleEnum.UserRole,
+      new Date(dto.created_at),
+      new Date(dto.updated_at)
+    )
   }
-
-  updateName(newName: string): void {
-    if (!newName || newName.length < 3) {
-      throw new Error('Name must be at least 3 characters long')
-    }
-    // this.name = newName;
-  }
-
-  // Add other methods as needed
 }

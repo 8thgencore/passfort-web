@@ -41,3 +41,18 @@ export interface ConfirmRegistrationRequest {
 export interface ResendOtpRequest {
   email: string
 }
+
+export interface ForgotPasswordRequest {
+  email: string
+}
+
+export interface ResetPasswordRequest {
+  email: string
+  new_password: string
+  otp: string
+}
+
+export interface ChangePasswordRequest {
+  old_password: string
+  new_password: string
+}

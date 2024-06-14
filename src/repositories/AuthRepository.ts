@@ -44,6 +44,18 @@ export class AuthRepository implements IAuthRepository {
     await this.authClient.resendOtp({ email })
   }
 
+  async changePassword(newPassword: string, oldPassword: string): Promise<void> {
+    await this.authClient.changePassword({ new_password: newPassword, old_password: oldPassword })
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    await this.authClient.forgotPassword({ email })
+  }
+
+  async resetPassword(email: string, newPassword: string, otp: string): Promise<void> {
+    await this.authClient.resetPassword({ email, new_password: newPassword, otp })
+  }
+
   isAuthenticated(): boolean {
     return this.authStore.isAuthenticated()
   }

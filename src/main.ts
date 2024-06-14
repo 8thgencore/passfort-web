@@ -11,6 +11,8 @@ import { AuthClient } from '@/services/auth/AuthClient'
 import { AuthRepository } from '@/repositories/AuthRepository'
 import { AuthStore, useAuthStore } from '@/store/modules/auth/AuthStore'
 import { setupInterceptors } from '@/services/http/interceptors'
+import { UserRepository } from './repositories/UserRepository'
+import { UserClient } from './services/user/UserClient'
 
 // Creating a Vue Application instance
 const app = createApp(App)
@@ -28,9 +30,11 @@ app.use(Notifications)
 const authStore = new AuthStore()
 const httpClient = new HttpClient('http://94.131.113.75:8700/v1')
 const authClient = new AuthClient(httpClient)
+const userClient = new UserClient(httpClient)
 
 // Creating an instance of the authentication repository
 const authRepository = new AuthRepository(authClient, authStore)
+const userRepository = new UserRepository(userClient)
 
 // Installing interceptors for processing HTTP requests and responses
 setupInterceptors(httpClient.instance, authRepository)
@@ -39,6 +43,7 @@ setupInterceptors(httpClient.instance, authRepository)
 app.provide('httpClient', httpClient)
 app.provide('authClient', authClient)
 app.provide('authRepository', authRepository)
+app.provide('userRepository', userRepository)
 app.provide('authStore', authStore)
 
 // Mounting an application to an element with the 'app' id

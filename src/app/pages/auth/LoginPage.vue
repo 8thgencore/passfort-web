@@ -2,19 +2,20 @@
   <v-container>
     <v-form @submit.prevent="onSubmit">
       <v-text-field v-model="email" label="Email" required></v-text-field>
-      <v-text-field v-model="name" label="Name" required></v-text-field>
       <v-text-field v-model="password" label="Password" type="password" required></v-text-field>
-      <v-btn type="submit" color="primary">Register</v-btn>
+      <v-btn type="submit" color="primary">Login</v-btn>
     </v-form>
-    <!-- Hover button to redirect to ResendOtp page -->
-    <v-btn @click="goToResendOtp" color="secondary" class="mt-2" outlined>Resend OTP</v-btn>
+    <v-btn @click="goToForgotPassword" color="secondary" class="mt-2" outlined
+      >Forgot Password</v-btn
+    >
   </v-container>
 </template>
 
 <script lang="ts">
-import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -24,28 +25,27 @@ export default defineComponent({
     }
 
     const email = ref('')
-    const name = ref('')
     const password = ref('')
     const router = useRouter()
 
     const onSubmit = async () => {
       try {
-        await authRepository.register(email.value, name.value, password.value)
-        router.push({ name: 'confirm-registration', query: { email: email.value } })
+        await authRepository.login(email.value, password.value)
+        router.push(Routes.Home)
       } catch (error) {
-        console.error('Registration failed', error)
+        console.error('Login failed', error)
       }
     }
 
-    const goToResendOtp = () => {
-      router.push('/resend-otp')
+    const goToForgotPassword = () => {
+      router.push(Routes.ForgotPassword)
     }
 
-    return { email, name, password, onSubmit, goToResendOtp }
+    return { email, password, onSubmit, goToForgotPassword }
   }
 })
 </script>
 
 <style scoped>
-/* Add custom styles if necessary */
+/* Добавьте стиль по вашему желанию */
 </style>

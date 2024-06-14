@@ -1,6 +1,7 @@
 import { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
 import { useNotification } from '@kyvg/vue3-notification'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
+import { getErrorMessage } from '@/utils/errorHandler'
 
 interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
@@ -32,7 +33,12 @@ export function setupInterceptors(
     async (error: AxiosError) => {
       const originalRequest = error.config as ExtendedAxiosRequestConfig
 
-      if (error.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      if (
+        error.response?.status === 401 &&
+        getErrorMessage(error) === 'access token has expired' &&
+        originalRequest &&
+        !originalRequest._retry
+      ) {
         originalRequest._retry = true
         try {
           const refreshToken = authRepository.getRefreshToken()
@@ -47,14 +53,7 @@ export function setupInterceptors(
         }
       }
 
-      let errorMessage = 'An unknown error occurred'
-
-      if (error.response) {
-        const errorData = error.response.data as { message?: string }
-        errorMessage = errorData.message || error.response.statusText || errorMessage
-      } else if (error.message) {
-        errorMessage = error.message
-      }
+      const errorMessage = getErrorMessage(error)
 
       notify({
         type: 'error',
