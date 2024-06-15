@@ -1,12 +1,13 @@
-import { UserInfoResponse } from '../models/userModels'
+import { UserResponse } from '../models/userModels'
 import { IUserClient } from './IUserClient'
 import { IHttpClient } from '../http/IHttpClient'
+import { Response } from '@/services/models/responseModels'
 
 export class UserClient implements IUserClient {
   constructor(private httpClient: IHttpClient) {}
 
-  async getUserInfo(): Promise<UserInfoResponse> {
-    const response = await this.httpClient.get<UserInfoResponse>('/users/me')
-    return response
+  async getUserInfo(): Promise<UserResponse> {
+    const response = await this.httpClient.get<Response<UserResponse>>('/users/me')
+    return response.data
   }
 }

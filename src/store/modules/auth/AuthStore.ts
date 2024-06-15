@@ -3,8 +3,8 @@ import { IAuthStore } from '@/store/modules/auth/interfaces/IAuthStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    accessToken: localStorage.getItem('access_token') || '',
-    refreshToken: localStorage.getItem('refresh_token') || ''
+    accessToken: localStorage.getItem('access_token'),
+    refreshToken: localStorage.getItem('refresh_token') 
   }),
   actions: {
     setTokens(accessToken: string, refreshToken: string) {
@@ -42,11 +42,11 @@ export class AuthStore implements IAuthStore {
     return this.store.isAuthenticated
   }
 
-  getAccessToken(): string {
+  getAccessToken(): string | null {
     return this.store.accessToken
   }
 
-  getRefreshToken(): string {
+  getRefreshToken(): string | null {
     return this.store.refreshToken
   }
 }

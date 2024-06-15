@@ -1,6 +1,7 @@
 import { IAuthClient } from '@/services/auth/IAuthClient'
 import { IHttpClient } from '@/services/http/IHttpClient'
 import {
+  AuthResponse,
   ChangePasswordRequest,
   ConfirmRegistrationRequest,
   ForgotPasswordRequest,
@@ -8,8 +9,8 @@ import {
   RegisterRequest,
   ResendOtpRequest,
   ResetPasswordRequest
-} from '@/services/models/requestModels'
-import { Response, AuthResponse } from '@/services/models/responseModels'
+} from '@/services/models/authModels'
+import { Response } from '@/services/models/responseModels'
 
 export class AuthClient implements IAuthClient {
   constructor(private httpClient: IHttpClient) {}

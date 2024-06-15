@@ -1,5 +1,5 @@
-import { UserInfoResponse } from '../models/userModels'
+import { UserResponse } from '../models/userModels'
 
 export interface IUserClient {
-  getUserInfo(): Promise<UserInfoResponse>
+  getUserInfo(): Promise<UserResponse>
 }

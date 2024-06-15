@@ -1,7 +1,7 @@
 import { AxiosInstance, AxiosError, InternalAxiosRequestConfig } from 'axios'
-import { useNotification } from '@kyvg/vue3-notification'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { getErrorMessage } from '@/utils/errorHandler'
+import { showErrorNotification } from '@/utils/notificationService'
 
 interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
   _retry?: boolean
@@ -11,9 +11,7 @@ export function setupInterceptors(
   httpClient: AxiosInstance,
   authRepository: IAuthRepository
 ): void {
-  const { notify } = useNotification()
-
-  // Перехватчик для добавления токена авторизации к каждому запросу
+  // Request interceptor to add the authorization token to each request
   httpClient.interceptors.request.use(
     (config) => {
       const token = authRepository.getAccessToken()
@@ -27,7 +25,7 @@ export function setupInterceptors(
     }
   )
 
-  // Перехватчик для обработки ошибок в ответах
+  // Response interceptor to handle errors in responses
   httpClient.interceptors.response.use(
     (response) => response,
     async (error: AxiosError) => {
@@ -36,32 +34,34 @@ export function setupInterceptors(
       if (
         error.response?.status === 401 &&
         getErrorMessage(error) === 'access token has expired' &&
-        originalRequest &&
-        !originalRequest._retry
+        originalRequest
       ) {
+        if (originalRequest._retry) {
+          authRepository.logout()
+          return Promise.reject(error)
+        }
+
         originalRequest._retry = true
         try {
           const refreshToken = authRepository.getRefreshToken()
-          httpClient.defaults.headers['Authorization'] = `Bearer ${refreshToken}`
-          const newAccessToken = await authRepository.refreshToken()
+          if (refreshToken != null) {
+            httpClient.defaults.headers['Authorization'] = `Bearer ${refreshToken}`
+            const newAccessToken = await authRepository.refreshToken()
 
-          originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
-          return httpClient(originalRequest)
+            originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`
+            return httpClient(originalRequest)
+          }
         } catch (e) {
           authRepository.logout()
-          window.location.href = '/login'
+          return Promise.reject(e)
         }
       }
 
       const errorMessage = getErrorMessage(error)
 
-      notify({
-        type: 'error',
-        title: 'Error',
-        text: errorMessage
-      })
+      showErrorNotification('Error', errorMessage)
 
-      console.error('AxiosError failed', error.response?.data)
+      console.error('AxiosError failed', errorMessage)
 
       return Promise.reject(error)
     }

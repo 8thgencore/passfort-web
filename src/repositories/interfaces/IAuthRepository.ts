@@ -9,6 +9,6 @@ export interface IAuthRepository {
   forgotPassword(email: string): Promise<void>
   resetPassword(email: string, newPassword: string, otp: string): Promise<void>
   isAuthenticated(): boolean
-  getAccessToken(): string
-  getRefreshToken(): string
+  getAccessToken(): string | null
+  getRefreshToken(): string | null
 }

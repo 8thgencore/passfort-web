@@ -22,7 +22,11 @@ export class AuthRepository implements IAuthRepository {
   }
 
   async logout(): Promise<void> {
-    await this.authClient.logout()
+    try {
+      await this.authClient.logout()
+    } catch (e) {
+      console.log('failed to logout on the server')
+    }
     this.authStore.clearTokens()
   }
 
@@ -60,11 +64,11 @@ export class AuthRepository implements IAuthRepository {
     return this.authStore.isAuthenticated()
   }
 
-  getAccessToken(): string {
+  getAccessToken(): string | null {
     return this.authStore.getAccessToken()
   }
 
-  getRefreshToken(): string {
+  getRefreshToken(): string | null {
     return this.authStore.getRefreshToken()
   }
 }

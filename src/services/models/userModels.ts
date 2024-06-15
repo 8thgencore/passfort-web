@@ -3,16 +3,16 @@ export interface UserRoleEnum {
   USER: 'user'
 }
 
+export interface UserResponse {
+  id: string
+  email: string
+  name: string
+  created_at: string
+  updated_at: string
+}
+
 export interface UpdateUserRequest {
   email: string
   name: string
   role: keyof UserRoleEnum
-}
-
-export interface UserInfoResponse {
-  id: string
-  name: string
-  email: string
-  updated_at: string
-  created_at: string
 }

@@ -17,6 +17,7 @@
 import { defineComponent, ref, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -38,7 +39,7 @@ export default defineComponent({
     }
 
     const goToChangePassword = () => {
-      router.push({ name: 'change-password' })
+      router.push(Routes.ChangePassword)
     }
 
     onMounted(() => {

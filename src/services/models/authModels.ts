@@ -56,3 +56,14 @@ export interface ChangePasswordRequest {
   old_password: string
   new_password: string
 }
+
+export interface AuthResponse {
+  access_token: string
+  refresh_token: string
+}
+
+export interface PasswordSecretResponse {
+  login: string
+  password: string
+  url: string
+}
