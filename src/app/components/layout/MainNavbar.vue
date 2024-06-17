@@ -6,6 +6,9 @@
     <v-btn v-if="!isAuthenticated" to="/login" boolean>Login</v-btn>
     <v-btn v-if="isAuthenticated" @click="logout" boolean>Logout</v-btn>
     <v-btn v-if="isAuthenticated" @click="goToProfile" boolean>Profile</v-btn>
+    <v-btn icon @click="toggleTheme">
+      <v-icon>{{ isDarkTheme ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}</v-icon>
+    </v-btn>
   </v-app-bar>
 </template>
 
@@ -14,6 +17,7 @@ import { Routes } from '@/app/router'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, computed, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { useTheme } from 'vuetify'
 
 export default defineComponent({
   setup() {
@@ -39,7 +43,16 @@ export default defineComponent({
       router.push({ name: Routes.Profile })
     }
 
-    return { isAuthenticated, logout, goToHome, goToProfile }
+    // Toggle theme
+    const vuetify = useTheme()
+
+    const isDarkTheme = computed(() => vuetify.global.current.value.dark)
+
+    const toggleTheme = () => {
+      vuetify.global.name.value = isDarkTheme.value ? 'light' : 'dark'
+    }
+
+    return { isAuthenticated, logout, goToHome, goToProfile, isDarkTheme, toggleTheme }
   }
 })
 </script>
