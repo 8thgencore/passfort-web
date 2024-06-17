@@ -1,4 +1,4 @@
-import { UserInfoResponse } from '@/services/models/userModels'
+import { UserResponse } from '@/services/models/userModels'
 import { BaseEntity } from './common/baseEntity'
 import { EntityId } from './common/entityId'
 
@@ -20,7 +20,7 @@ export class User extends BaseEntity {
   }
 
   // Static method to convert from DTO
-  static convertFromDto(dto: UserInfoResponse): User {
+  static convertFromDto(dto: UserResponse): User {
     return new User(
       new EntityId(dto.id),
       dto.email,

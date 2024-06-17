@@ -22,7 +22,7 @@
 import { Routes } from '@/app/router'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { showSuccessNotification } from '@/utils/notificationService'
-import { defineComponent, ref, inject, onMounted } from 'vue'
+import { defineComponent, ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
@@ -36,17 +36,11 @@ export default defineComponent({
     const oldPassword = ref('')
     const newPassword = ref('')
 
-    // Check if the user is authenticated on component mount
-    // onMounted(() => {
-    //   if (!authRepository.isAuthenticated()) {
-    //     router.push(Routes.Login)
-    //   }
-    // })
-
     const onSubmit = async () => {
       try {
         await authRepository.changePassword(newPassword.value, oldPassword.value)
         showSuccessNotification('Success', 'Password changed successfully')
+        router.push({ name: Routes.Profile })
       } catch (error) {
         console.error('Password change failed', error)
       }

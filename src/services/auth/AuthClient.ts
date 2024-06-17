@@ -42,7 +42,7 @@ export class AuthClient implements IAuthClient {
   }
 
   async changePassword(data: ChangePasswordRequest): Promise<void> {
-    await this.httpClient.post('/auth/change-password', data)
+    await this.httpClient.put('/auth/change-password', data)
   }
 
   async forgotPassword(data: ForgotPasswordRequest): Promise<void> {

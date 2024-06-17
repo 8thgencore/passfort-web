@@ -4,18 +4,30 @@
     <v-spacer></v-spacer>
     <v-btn v-if="!isAuthenticated" to="/register" boolean>Register</v-btn>
     <v-btn v-if="!isAuthenticated" to="/login" boolean>Login</v-btn>
-    <v-btn v-if="isAuthenticated" @click="logout" boolean>Logout</v-btn>
+    <v-btn v-if="isAuthenticated" @click="openConfirmationDialog" boolean>Logout</v-btn>
     <v-btn v-if="isAuthenticated" @click="goToProfile" boolean>Profile</v-btn>
     <v-btn icon @click="toggleTheme">
       <v-icon>{{ isDarkTheme ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}</v-icon>
     </v-btn>
+
+    <v-dialog v-model="dialog" max-width="290">
+      <v-card>
+        <v-card-title class="headline">Confirm Logout</v-card-title>
+        <v-card-text> Are you sure you want to logout? </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="green darken-1" string @click="dialog = false">Cancel</v-btn>
+          <v-btn color="green darken-1" string @click="logout">Logout</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app-bar>
 </template>
 
 <script lang="ts">
 import { Routes } from '@/app/router'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
-import { defineComponent, computed, inject } from 'vue'
+import { defineComponent, computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTheme } from 'vuetify'
 
@@ -28,11 +40,23 @@ export default defineComponent({
 
     const router = useRouter()
 
+    const dialog = ref(false)
+
     const isAuthenticated = computed(() => authRepository.isAuthenticated())
 
+    const openConfirmationDialog = () => {
+      dialog.value = true
+    }
+
     const logout = async () => {
-      await authRepository.logout()
-      window.location.reload()
+      try {
+        await authRepository.logout()
+        router.push({ name: Routes.Home })
+      } catch (error) {
+        console.error('Logout failed', error)
+      } finally {
+        dialog.value = false
+      }
     }
 
     const goToHome = () => {
@@ -52,7 +76,16 @@ export default defineComponent({
       vuetify.global.name.value = isDarkTheme.value ? 'light' : 'dark'
     }
 
-    return { isAuthenticated, logout, goToHome, goToProfile, isDarkTheme, toggleTheme }
+    return {
+      isAuthenticated,
+      logout,
+      dialog,
+      openConfirmationDialog,
+      goToHome,
+      goToProfile,
+      isDarkTheme,
+      toggleTheme
+    }
   }
 })
 </script>

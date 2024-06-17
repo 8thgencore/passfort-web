@@ -31,14 +31,14 @@ export default defineComponent({
     const onSubmit = async () => {
       try {
         await authRepository.login(email.value, password.value)
-        router.push(Routes.Home)
+        router.push({ name: Routes.Home })
       } catch (error) {
         console.error('Login failed', error)
       }
     }
 
     const goToForgotPassword = () => {
-      router.push(Routes.ForgotPassword)
+      router.push({ name: Routes.ForgotPassword })
     }
 
     return { email, password, onSubmit, goToForgotPassword }

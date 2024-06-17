@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from '@/app/App.vue'
 import { createPinia } from 'pinia'
-import router from '@/app/router'
+import router, { createAppRouter } from '@/app/router'
 import vuetify from '@/app/plugins/vuetify'
 import Notifications from '@kyvg/vue3-notification'
 
@@ -23,8 +23,7 @@ const app = createApp(App)
 // Creating a Pinia instance
 const pinia = createPinia()
 
-// Connecting the router, Vuetify and Pinia to the application
-app.use(router)
+// Connecting the Vuetify and Pinia to the application
 app.use(vuetify)
 app.use(pinia)
 app.use(Notifications)
@@ -48,6 +47,10 @@ app.provide('authClient', authClient)
 app.provide('authRepository', authRepository)
 app.provide('userRepository', userRepository)
 app.provide('authStore', authStore)
+
+// Creating and using router with authRepository
+const router = createAppRouter(authRepository)
+app.use(router)
 
 // Mounting an application to an element with the 'app' id
 app.mount('#app')
