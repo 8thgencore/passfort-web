@@ -15,8 +15,6 @@ export class UserRepository implements IUserRepository {
 
   async getUserInfo(): Promise<User> {
     const userResponse = await this.userClient.getUserInfo()
-    console.log(userResponse)
-
     return User.convertFromDto(userResponse)
   }
 }
