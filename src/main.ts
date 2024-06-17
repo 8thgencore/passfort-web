@@ -14,6 +14,9 @@ import { setupInterceptors } from '@/services/http/interceptors'
 import { UserRepository } from './repositories/UserRepository'
 import { UserClient } from './services/user/UserClient'
 
+// Import configuration
+import config from '@/config'
+
 // Creating a Vue Application instance
 const app = createApp(App)
 
@@ -28,7 +31,7 @@ app.use(Notifications)
 
 // Creating instances of the necessary services and storages
 const authStore = new AuthStore()
-const httpClient = new HttpClient('http://94.131.113.75:8700/v1')
+const httpClient = new HttpClient(config.apiBaseUrl)
 const authClient = new AuthClient(httpClient)
 const userClient = new UserClient(httpClient)
 
