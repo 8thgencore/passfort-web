@@ -8,9 +8,10 @@ import ChangePassword from '@/app/pages/auth/ChangePassword.vue'
 import ForgotPassword from '@/app/pages/auth/ForgotPassword.vue'
 import ResetPassword from '@/app/pages/auth/ResetPassword.vue'
 import ProfilePage from '@/app/pages/user/ProfilePage.vue'
+import CreateMasterPasswordPage from '@/app/pages/master-password/CreateMasterPasswordPage.vue'
+import ChangeMasterPasswordPage from '@/app/pages/master-password/ChangeMasterPasswordPage.vue'
 import { createAuthGuard } from './middleware'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
-import { inject } from 'vue'
 
 export enum Routes {
   Home = 'home',
@@ -22,7 +23,10 @@ export enum Routes {
   ForgotPassword = 'forgot-password',
   ResetPassword = 'reset-password',
   //
-  Profile = 'profile'
+  Profile = 'profile',
+  //
+  CreateMasterPassword = 'create-master-password',
+  ChangeMasterPassword = 'change-master-password'
 }
 
 const routes = [
@@ -38,7 +42,17 @@ const routes = [
   { path: '/change-password', name: Routes.ChangePassword, component: ChangePassword },
   { path: '/forgot-password', name: Routes.ForgotPassword, component: ForgotPassword },
   { path: '/reset-password', name: Routes.ResetPassword, component: ResetPassword },
-  { path: '/profile', name: Routes.Profile, component: ProfilePage }
+  { path: '/profile', name: Routes.Profile, component: ProfilePage },
+  {
+    path: '/create-master-password',
+    name: Routes.CreateMasterPassword,
+    component: CreateMasterPasswordPage
+  },
+  {
+    path: '/change-master-password',
+    name: Routes.ChangeMasterPassword,
+    component: ChangeMasterPasswordPage
+  }
 ]
 
 export function createAppRouter(authRepository: IAuthRepository) {

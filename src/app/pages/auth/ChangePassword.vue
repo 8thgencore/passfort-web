@@ -1,20 +1,29 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="onSubmit">
-      <v-text-field
-        v-model="oldPassword"
-        label="Old Password"
-        type="password"
-        required
-      ></v-text-field>
-      <v-text-field
-        v-model="newPassword"
-        label="New Password"
-        type="password"
-        required
-      ></v-text-field>
-      <v-btn type="submit" color="primary">Change Password</v-btn>
-    </v-form>
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title>Change Master Password</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="onSubmit">
+              <v-text-field
+                v-model="oldPassword"
+                label="Old Password"
+                type="password"
+                required
+              ></v-text-field>
+              <v-text-field
+                v-model="newPassword"
+                label="New Password"
+                type="password"
+                required
+              ></v-text-field>
+              <v-btn type="submit" color="primary" block>Change Password</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

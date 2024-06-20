@@ -16,6 +16,8 @@ import { UserClient } from './services/user/UserClient'
 
 // Import configuration
 import config from '@/config'
+import { MasterPasswordClient } from './services/master-password/MasterPasswordClient'
+import { MasterPasswordRepository } from './repositories/MasterPasswordRepository'
 
 // Creating a Vue Application instance
 const app = createApp(App)
@@ -33,10 +35,12 @@ const authStore = new AuthStore()
 const httpClient = new HttpClient(config.apiBaseUrl)
 const authClient = new AuthClient(httpClient)
 const userClient = new UserClient(httpClient)
+const masterPasswordClient = new MasterPasswordClient(httpClient);
 
 // Creating an instance of the authentication repository
 const authRepository = new AuthRepository(authClient, authStore)
 const userRepository = new UserRepository(userClient)
+const masterPasswordRepository = new MasterPasswordRepository(masterPasswordClient);
 
 // Installing interceptors for processing HTTP requests and responses
 setupInterceptors(httpClient.instance, authRepository)
@@ -44,9 +48,11 @@ setupInterceptors(httpClient.instance, authRepository)
 // Providing global dependencies for use in any component
 app.provide('httpClient', httpClient)
 app.provide('authClient', authClient)
+app.provide('masterPasswordClient', masterPasswordClient)
+app.provide('authStore', authStore)
 app.provide('authRepository', authRepository)
 app.provide('userRepository', userRepository)
-app.provide('authStore', authStore)
+app.provide('masterPasswordRepository', masterPasswordRepository)
 
 // Creating and using router with authRepository
 const router = createAppRouter(authRepository)
