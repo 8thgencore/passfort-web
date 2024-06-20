@@ -4,7 +4,7 @@ import { IAuthStore } from '@/store/modules/auth/interfaces/IAuthStore'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     accessToken: localStorage.getItem('access_token'),
-    refreshToken: localStorage.getItem('refresh_token') 
+    refreshToken: localStorage.getItem('refresh_token')
   }),
   actions: {
     setTokens(accessToken: string, refreshToken: string) {

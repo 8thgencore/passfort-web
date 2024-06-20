@@ -1,10 +1,18 @@
 <template>
   <v-container>
-    <v-card-title class="headline">Confirm Registration</v-card-title>
-    <v-form @submit.prevent="confirmRegistration">
-      <v-text-field v-model="otp" label="OTP" required></v-text-field>
-      <v-btn type="submit" color="primary">Confirm</v-btn>
-    </v-form>
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title class="headline">Confirm Registration</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="confirmRegistration">
+              <v-text-field v-model="otp" label="OTP" required></v-text-field>
+              <v-btn type="submit" color="primary">Confirm</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

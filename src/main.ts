@@ -35,12 +35,12 @@ const authStore = new AuthStore()
 const httpClient = new HttpClient(config.apiBaseUrl)
 const authClient = new AuthClient(httpClient)
 const userClient = new UserClient(httpClient)
-const masterPasswordClient = new MasterPasswordClient(httpClient);
+const masterPasswordClient = new MasterPasswordClient(httpClient)
 
 // Creating an instance of the authentication repository
 const authRepository = new AuthRepository(authClient, authStore)
 const userRepository = new UserRepository(userClient)
-const masterPasswordRepository = new MasterPasswordRepository(masterPasswordClient);
+const masterPasswordRepository = new MasterPasswordRepository(masterPasswordClient)
 
 // Installing interceptors for processing HTTP requests and responses
 setupInterceptors(httpClient.instance, authRepository)

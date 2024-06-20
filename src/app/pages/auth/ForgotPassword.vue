@@ -1,9 +1,18 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="onSubmit">
-      <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
-      <v-btn type="submit" color="primary">Request Password Reset</v-btn>
-    </v-form>
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title>Forgot password</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="onSubmit">
+              <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
+              <v-btn type="submit" color="primary">Request Password Reset</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

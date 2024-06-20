@@ -1,17 +1,81 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
-    <h1 class="text-4xl font-bold mb-4">Добро пожаловать в Парольный менеджер</h1>
-    <p class="text-xl text-center max-w-2xl">
-      Этот менеджер паролей позволяет безопасно хранить и управлять вашими паролями. Вы можете
-      создавать, редактировать и удалять пароли, а также получать доступ к ним в любое время.
-    </p>
-  </div>
+  <v-container>
+    <v-row class="text-center">
+      <v-col cols="12">
+        <v-img
+          src="https://hdfon.ru/wp-content/uploads/hdfon.ru-910967601.jpg"
+          alt="Security"
+          class="mb-6"
+          contain
+          height="300px"
+        ></v-img>
+        <h1 class="text-h2 font-weight-bold mb-4">Welcome to PassFort</h1>
+        <p class="text-subtitle-1 mb-6">
+          This password manager allows you to securely store and manage your passwords. You can
+          create, edit, and delete passwords, as well as access them at any time.
+        </p>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-img :src="secureVaultImage" alt="Secure Vault" height="200px" cover></v-img>
+          <v-card-title>Secure Vault</v-card-title>
+          <v-card-text>
+            Create your own collections of secrets. Secrets can be passwords or textual information.
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-img
+            :src="passwordManagementImage"
+            alt="Password Management"
+            height="200px"
+            cover
+          ></v-img>
+          <v-card-title>Password Management</v-card-title>
+          <v-card-text>
+            Manage your passwords with ease. Store, edit, and delete them whenever you need.
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="4">
+        <v-card>
+          <v-img :src="textInformationImage" alt="Text Information" height="200px" cover></v-img>
+          <v-card-title>Text Information</v-card-title>
+          <v-card-text>
+            Safely store important text information. Access it securely anytime.
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import secureVaultImage from '@/app/assets/images/secure-vault.jpg'
+import passwordManagementImage from '@/app/assets/images/password-management.jpg'
+import textInformationImage from '@/app/assets/images/text-information.webp'
 
 export default defineComponent({
-  name: 'HomePage'
+  name: 'HomePage',
+  data() {
+    return {
+      secureVaultImage,
+      passwordManagementImage,
+      textInformationImage
+    }
+  }
 })
 </script>
+
+<style scoped>
+.text-center {
+  text-align: center;
+}
+.mb-6 {
+  margin-bottom: 24px;
+}
+</style>

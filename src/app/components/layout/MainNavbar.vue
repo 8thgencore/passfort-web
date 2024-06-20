@@ -1,6 +1,6 @@
 <template>
   <v-app-bar app>
-    <v-toolbar-title @click="goToHome">Парольный менеджер</v-toolbar-title>
+    <v-toolbar-title @click="goToHome">PassFort</v-toolbar-title>
     <v-spacer></v-spacer>
     <v-btn v-if="!isAuthenticated" to="/register" boolean>Register</v-btn>
     <v-btn v-if="!isAuthenticated" to="/login" boolean>Login</v-btn>
@@ -29,7 +29,7 @@ import { Routes } from '@/app/router'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { defineComponent, computed, inject, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { useTheme } from 'vuetify'
+import useThemeSwitcher from '@/composables/useThemeSwitcher'
 
 export default defineComponent({
   setup() {
@@ -68,13 +68,7 @@ export default defineComponent({
     }
 
     // Toggle theme
-    const vuetify = useTheme()
-
-    const isDarkTheme = computed(() => vuetify.global.current.value.dark)
-
-    const toggleTheme = () => {
-      vuetify.global.name.value = isDarkTheme.value ? 'light' : 'dark'
-    }
+    const { isDarkTheme, toggleTheme } = useThemeSwitcher()
 
     return {
       isAuthenticated,

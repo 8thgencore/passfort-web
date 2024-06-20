@@ -1,16 +1,25 @@
 <template>
   <v-container>
-    <v-form @submit.prevent="onSubmit">
-      <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
-      <v-text-field v-model="otp" label="OTP" required></v-text-field>
-      <v-text-field
-        v-model="newPassword"
-        label="New Password"
-        type="password"
-        required
-      ></v-text-field>
-      <v-btn type="submit" color="primary">Reset Password</v-btn>
-    </v-form>
+    <v-row justify="center">
+      <v-col cols="12" md="6">
+        <v-card>
+          <v-card-title>Reset password</v-card-title>
+          <v-card-text>
+            <v-form @submit.prevent="onSubmit">
+              <v-text-field v-model="email" label="Email" type="email" required></v-text-field>
+              <v-text-field v-model="otp" label="OTP" required></v-text-field>
+              <v-text-field
+                v-model="newPassword"
+                label="New Password"
+                type="password"
+                required
+              ></v-text-field>
+              <v-btn type="submit" color="primary">Reset Password</v-btn>
+            </v-form>
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

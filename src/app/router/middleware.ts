@@ -17,7 +17,7 @@ export const createAuthGuard = (authRepository: IAuthRepository) => {
       Routes.ForgotPassword,
       Routes.ResetPassword,
       Routes.ResendOtp,
-      Routes.ConfirmRegistration,
+      Routes.ConfirmRegistration
     ]
     const authRequired = !publicPages.includes(to.name as string)
 
