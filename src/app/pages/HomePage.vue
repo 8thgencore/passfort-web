@@ -3,11 +3,11 @@
     <v-row class="text-center">
       <v-col cols="12">
         <v-img
-          src="https://hdfon.ru/wp-content/uploads/hdfon.ru-910967601.jpg"
+          src="https://www.clipartmax.com/png/full/153-1532892_disaster-recovery-services-tech-process.png"
           alt="Security"
           class="mb-6"
           contain
-          height="300px"
+          height="200px"
         ></v-img>
         <h1 class="text-h2 font-weight-bold mb-4">Welcome to PassFort</h1>
         <p class="text-subtitle-1 mb-6">

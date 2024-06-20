@@ -38,12 +38,8 @@
             </div>
             <v-subheader>Master Password Management</v-subheader>
             <div class="mb-4">
-              <v-btn color="secondary" @click="goToCreateMasterPassword"
-                >Create Master Password</v-btn
-              >
-              <v-btn color="secondary" class="ml-2" @click="goToChangeMasterPassword"
-                >Change Master Password</v-btn
-              >
+              <v-btn color="secondary" @click="goToCreateMasterPassword">Create</v-btn>
+              <v-btn color="secondary" class="ml-2" @click="goToChangeMasterPassword">Change</v-btn>
             </div>
           </v-card-text>
         </v-card>

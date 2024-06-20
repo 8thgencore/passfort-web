@@ -24,6 +24,9 @@
 <script lang="ts">
 import { defineComponent, ref, inject } from 'vue'
 import { IMasterPasswordRepository } from '@/repositories/interfaces/IMasterPasswordRepository'
+import { showSuccessNotification } from '@/utils/notificationService'
+import { useRouter } from 'vue-router'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -32,12 +35,15 @@ export default defineComponent({
       throw new Error('masterPasswordRepository is not provided')
     }
 
+    const router = useRouter()
+
     const password = ref('')
 
     const createMasterPassword = async () => {
       try {
         await masterPasswordRepository.createMasterPassword(password.value)
-        alert('Master password created successfully')
+        showSuccessNotification('Success', 'Master password created successfully')
+        router.push({ name: Routes.Profile })
       } catch (error) {
         console.error('Failed to create master password', error)
       }

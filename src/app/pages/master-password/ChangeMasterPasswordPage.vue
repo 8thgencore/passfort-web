@@ -30,6 +30,9 @@
 <script lang="ts">
 import { defineComponent, ref, inject } from 'vue'
 import { IMasterPasswordRepository } from '@/repositories/interfaces/IMasterPasswordRepository'
+import { showSuccessNotification } from '@/utils/notificationService'
+import { useRouter } from 'vue-router'
+import { Routes } from '@/app/router'
 
 export default defineComponent({
   setup() {
@@ -37,6 +40,7 @@ export default defineComponent({
     if (!masterPasswordRepository) {
       throw new Error('masterPasswordRepository is not provided')
     }
+    const router = useRouter()
 
     const currentPassword = ref('')
     const newPassword = ref('')
@@ -47,7 +51,8 @@ export default defineComponent({
           currentPassword.value,
           newPassword.value
         )
-        alert('Master password changed successfully')
+        showSuccessNotification('Success', 'Master password changed successfully')
+        router.push({ name: Routes.Profile })
       } catch (error) {
         console.error('Failed to change master password', error)
       }
