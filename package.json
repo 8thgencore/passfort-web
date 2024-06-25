@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build --force",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
+    "lint": "eslint . --fix",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -17,17 +17,18 @@
     "@mdi/font": "^7.4.47",
     "axios": "^1.7.2",
     "pinia": "^2.1.7",
-    "sass": "^1.77.5",
+    "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
     "vite-plugin-vuetify": "^2.0.3",
-    "vue": "^3.4.29",
-    "vue-router": "^4.3.3",
-    "vuetify": "^3.6.9"
+    "vue": "^3.4.30",
+    "vue-router": "^4.4.0",
+    "vuetify": "^3.6.10"
   },
   "devDependencies": {
+    "@eslint/js": "^9.5.0",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^20.14.2",
+    "@types/node": "^20.14.8",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vitejs/plugin-vue-jsx": "^4.0.0",
     "@vue/eslint-config-prettier": "^9.0.0",
@@ -36,13 +37,15 @@
     "autoprefixer": "^10.4.19",
     "eslint": "^9.5.0",
     "eslint-plugin-vue": "^9.26.0",
+    "globals": "^15.6.0",
     "npm-run-all2": "^6.2.0",
     "prettier": "^3.3.2",
-    "typescript": "~5.4.5",
+    "typescript": "~5.5.2",
+    "typescript-eslint": "^7.14.1",
     "vite": "^5.3.1",
-    "vite-plugin-pages": "^0.32.2",
-    "vite-plugin-vue-devtools": "^7.3.0",
+    "vite-plugin-pages": "^0.32.3",
+    "vite-plugin-vue-devtools": "^7.3.4",
     "vite-plugin-vue-layouts": "^0.11.0",
-    "vue-tsc": "^2.0.21"
+    "vue-tsc": "^2.0.22"
   }
 }
