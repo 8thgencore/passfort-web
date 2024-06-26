@@ -24,6 +24,7 @@ export class AuthRepository implements IAuthRepository {
   async logout(): Promise<void> {
     try {
       await this.authClient.logout()
+      this.authStore.clearTokens()
     } catch (e) {
       console.log('failed to logout on the server')
     }

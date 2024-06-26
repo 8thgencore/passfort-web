@@ -8,4 +8,8 @@ export class EntityId {
   toString(): string {
     return this.id
   }
+
+  equals(other: EntityId): boolean {
+    return this.id === other.id
+  }
 }

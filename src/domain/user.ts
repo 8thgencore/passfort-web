@@ -17,10 +17,15 @@ export class User extends BaseEntity {
     public readonly updatedAt: Date
   ) {
     super(id)
-  }
 
-  // Static method to convert from DTO
-  static convertFromDto(dto: UserResponse): User {
+    if (!email || !name || !role) {
+      throw new Error('Email, name, and role must not be empty')
+    }
+  }
+}
+
+export class UserFactory {
+  static createFromDto(dto: UserResponse): User {
     return new User(
       new EntityId(dto.id),
       dto.email,

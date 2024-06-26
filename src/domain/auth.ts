@@ -8,6 +8,9 @@ export interface AuthProps {
 export class Auth extends ValueObject<AuthProps> {
   constructor(props: AuthProps) {
     super(props)
+    if (!props.accessToken || !props.refreshToken) {
+      throw new Error('Access token and refresh token must not be empty')
+    }
   }
 
   get accessToken(): string {

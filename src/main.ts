@@ -4,6 +4,7 @@ import { createPinia } from 'pinia'
 import router, { createAppRouter } from '@/app/router'
 import vuetify from '@/app/plugins/vuetify'
 import Notifications from '@kyvg/vue3-notification'
+import config from '@/config'
 
 // Importing client services and repositories
 import { HttpClient } from '@/services/http/HttpClient'
@@ -13,11 +14,10 @@ import { AuthStore } from '@/store/modules/auth/AuthStore'
 import { setupInterceptors } from '@/services/http/interceptors'
 import { UserRepository } from './repositories/UserRepository'
 import { UserClient } from './services/user/UserClient'
-
-// Import configuration
-import config from '@/config'
 import { MasterPasswordClient } from './services/master-password/MasterPasswordClient'
 import { MasterPasswordRepository } from './repositories/MasterPasswordRepository'
+import { CollectionClient } from './services/collection/CollectionClient'
+import { CollectionRepository } from './repositories/CollectionRepository'
 
 // Creating a Vue Application instance
 const app = createApp(App)
@@ -36,11 +36,13 @@ const httpClient = new HttpClient(config.apiBaseUrl)
 const authClient = new AuthClient(httpClient)
 const userClient = new UserClient(httpClient)
 const masterPasswordClient = new MasterPasswordClient(httpClient)
+const collectionClient = new CollectionClient(httpClient)
 
 // Creating an instance of the authentication repository
 const authRepository = new AuthRepository(authClient, authStore)
 const userRepository = new UserRepository(userClient)
 const masterPasswordRepository = new MasterPasswordRepository(masterPasswordClient)
+const collectionRepository = new CollectionRepository(collectionClient)
 
 // Installing interceptors for processing HTTP requests and responses
 setupInterceptors(httpClient.instance, authRepository)
@@ -53,6 +55,7 @@ app.provide('authStore', authStore)
 app.provide('authRepository', authRepository)
 app.provide('userRepository', userRepository)
 app.provide('masterPasswordRepository', masterPasswordRepository)
+app.provide('collectionRepository', collectionRepository)
 
 // Creating and using router with authRepository
 const router = createAppRouter(authRepository)
