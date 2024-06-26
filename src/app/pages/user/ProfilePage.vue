@@ -1,51 +1,99 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col cols="12" md="6">
-        <v-card>
-          <v-card-title>Profile Information</v-card-title>
-          <v-card-text>
-            <v-list>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Email</v-list-item-title>
-                  <v-list-item-subtitle>{{ user.email }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Name</v-list-item-title>
-                  <v-list-item-subtitle>{{ user.name }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-content>
-                  <v-list-item-title>Role</v-list-item-title>
-                  <v-list-item-subtitle>{{ user.role }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list>
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" md="6">
-        <v-card class="mb-4">
-          <v-card-title>Password Management</v-card-title>
-          <v-card-text>
-            <v-subheader>Change Password</v-subheader><br />
-            <div class="mb-4">
-              <v-btn color="primary" @click="goToChangePassword">Change Password</v-btn>
-            </div>
-            <v-subheader>Master Password Management</v-subheader>
-            <div class="mb-4">
-              <v-btn color="secondary" @click="goToCreateMasterPassword">Create</v-btn>
-              <v-btn color="secondary" class="ml-2" @click="goToChangeMasterPassword">Change</v-btn>
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+  <div style="max-width: 960px; margin: 0 auto">
+    <section>
+      <v-container fluid>
+        <h2 class="text-h5 text-sm-h5 mb-2">Profile Information</h2>
+
+        <v-row dense>
+          <v-col cols="12" sm="4" xs="6">
+            <v-card outlined>
+              <v-card-text class="d-flex align-center">
+                <v-avatar class="icon-background mr-3">
+                  <v-icon color="primary">mdi-email</v-icon>
+                </v-avatar>
+                <div>
+                  <div class="font-weight-medium">Email</div>
+                  <div>{{ user.email }}</div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="4" xs="6">
+            <v-card outlined>
+              <v-card-text class="d-flex align-center">
+                <v-avatar class="icon-background mr-3">
+                  <v-icon color="primary">mdi-badge-account</v-icon>
+                </v-avatar>
+                <div>
+                  <div class="font-weight-medium">Name</div>
+                  <div>{{ user.name }}</div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="4" xs="6">
+            <v-card outlined>
+              <v-card-text class="d-flex align-center">
+                <v-avatar class="icon-background mr-3">
+                  <v-icon color="primary">mdi-shield-account</v-icon>
+                </v-avatar>
+                <div>
+                  <div class="font-weight-medium">Role</div>
+                  <div>{{ user.role }}</div>
+                </div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+
+    <section>
+      <v-container fluid>
+        <h2 class="text-h5 text-sm-h5 mb-2">Password Management</h2>
+
+        <v-row dense>
+          <v-col cols="12" md="8" lg="12">
+            <v-row>
+              <!-- User Password Section -->
+              <v-col cols="12" sm="6">
+                <v-card outlined>
+                  <v-card-title>User Password</v-card-title>
+                  <v-card-text>
+                    <v-btn-toggle>
+                      <v-btn variant="outlined" @click="goToChangePassword">
+                        <v-icon left class="mr-2">mdi-lock-reset</v-icon>
+                        Change Password
+                      </v-btn>
+                    </v-btn-toggle>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+
+              <!-- Master Password Section -->
+              <v-col cols="12" sm="6">
+                <v-card outlined>
+                  <v-card-title>Master Password</v-card-title>
+                  <v-card-text>
+                    <v-btn-toggle>
+                      <v-btn variant="outlined" @click="goToCreateMasterPassword">
+                        <v-icon left class="mr-2">mdi-plus</v-icon>
+                        Create
+                      </v-btn>
+                      <v-btn variant="outlined" @click="goToChangeMasterPassword">
+                        <v-icon left class="mr-2">mdi-pencil</v-icon>
+                        Change
+                      </v-btn>
+                    </v-btn-toggle>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+            </v-row>
+          </v-col>
+        </v-row>
+      </v-container>
+    </section>
+  </div>
 </template>
 
 <script lang="ts">
@@ -95,5 +143,23 @@ export default defineComponent({
 </script>
 
 <style scoped>
-/* Add your styles here */
+.icon-background {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.08); /* Adjust background color */
+  border-radius: 4px; /* Adjust border radius if needed */
+}
+.v-card {
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Adjust border color */
+  border-radius: 4px; /* Adjust border radius */
+  background-color: rgba(0, 0, 0, 0.04); /* Adjust card background color */
+  box-shadow: none; /* Remove default shadow */
+}
+
+.v-avatar {
+  border: 1px solid rgba(255, 255, 255, 0.12); /* Adjust border style */
+}
 </style>
