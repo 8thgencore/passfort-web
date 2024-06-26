@@ -7,8 +7,8 @@ export class Collection extends BaseEntity {
     id: EntityId,
     public readonly name: string,
     public readonly description: string,
-    public readonly created_by: string,
-    public readonly updated_by: string,
+    public readonly createdBy: string,
+    public readonly updatedBy: string,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {

@@ -1,6 +1,6 @@
 import { IUserClient } from '@/services/user/IUserClient'
 import { IUserRepository } from './interfaces/IUserRepository'
-import { User } from '@/domain/user'
+import { User, UserFactory } from '@/domain/user'
 
 export class UserRepository implements IUserRepository {
   private userClient: IUserClient
@@ -15,6 +15,6 @@ export class UserRepository implements IUserRepository {
 
   async getUserInfo(): Promise<User> {
     const userResponse = await this.userClient.getUserInfo()
-    return User.convertFromDto(userResponse)
+    return UserFactory.createFromDto(userResponse)
   }
 }

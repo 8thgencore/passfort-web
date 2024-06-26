@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from '@/app/App.vue'
 import { createPinia } from 'pinia'
-import router, { createAppRouter } from '@/app/router'
+import { createAppRouter } from '@/app/router'
 import vuetify from '@/app/plugins/vuetify'
 import Notifications from '@kyvg/vue3-notification'
 import config from '@/config'

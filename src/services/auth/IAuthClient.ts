@@ -6,8 +6,8 @@ import {
   RegisterRequest,
   ResendOtpRequest,
   ResetPasswordRequest
-} from '@/services/models/requestModels'
-import { AuthResponse } from '@/services/models/responseModels'
+} from '@/services/models/authModels'
+import { AuthResponse } from '@/services/models/authModels'
 
 export interface IAuthClient {
   login(data: LoginRequest): Promise<AuthResponse>

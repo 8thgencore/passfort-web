@@ -60,7 +60,7 @@ import passwordManagementImage from '@/app/assets/images/password-management.jpg
 import textInformationImage from '@/app/assets/images/text-information.webp'
 
 export default defineComponent({
-  name: 'HomePage',
+  name: 'UnauthHomePage',
   data() {
     return {
       secureVaultImage,
@@ -71,11 +71,4 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-.text-center {
-  text-align: center;
-}
-.mb-6 {
-  margin-bottom: 24px;
-}
-</style>
+<style scoped></style>
