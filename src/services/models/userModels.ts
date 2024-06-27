@@ -7,6 +7,7 @@ export interface UserResponse {
   id: string
   email: string
   name: string
+  master_password_set: boolean
   created_at: string
   updated_at: string
 }

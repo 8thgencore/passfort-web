@@ -13,6 +13,7 @@ export class User extends BaseEntity {
     public readonly email: string,
     public readonly name: string,
     public readonly role: UserRoleEnum,
+    public readonly master_password_set: boolean,
     public readonly createdAt: Date,
     public readonly updatedAt: Date
   ) {
@@ -31,6 +32,7 @@ export class UserFactory {
       dto.email,
       dto.name,
       UserRoleEnum.UserRole,
+      dto.master_password_set,
       new Date(dto.created_at),
       new Date(dto.updated_at)
     )
