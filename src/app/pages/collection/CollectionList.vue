@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list class="collection-list">
     <v-list-item-group>
       <v-list-item
         v-for="collection in collections"
@@ -11,9 +11,11 @@
           <v-list-item-subtitle>{{ collection.description }}</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
-      <v-list-item @click="$emit('addCollection')">
+      <v-list-item @click="$emit('loadMoreCollections')" class="load-more">
         <v-list-item-content>
-          <v-list-item-title> <v-icon left>mdi-plus</v-icon> Add Collection </v-list-item-title>
+          <v-list-item-title>
+            <v-icon left>mdi-chevron-down</v-icon> Load More Collections
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list-item-group>
@@ -28,9 +30,16 @@ export default defineComponent({
   name: 'CollectionList',
   props: {
     collections: {
-      type: Object as PropType<Collection[]>,
+      type: Array as PropType<Collection[]>,
       required: true
     }
-  }
+  },
+  emits: ['collectionSelected', 'loadMoreCollections']
 })
 </script>
+
+<style>
+.v-list-item--density-default.v-list-item--one-line:nth-last-child(-n + 1) {
+  margin-bottom: 52px;
+}
+</style>

@@ -1,3 +1,8 @@
+export interface PaginationOptions {
+  limit: number
+  skip: number
+}
+
 export interface ErrorResponse {
   success: boolean
   messages: string[]

@@ -17,7 +17,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue'
+import { defineComponent, ref, watch, inject } from 'vue'
+import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
 
 export default defineComponent({
   name: 'AddCollectionDialog',
@@ -27,7 +28,14 @@ export default defineComponent({
       required: true
     }
   },
+  emits: ['update:modelValue', 'collectionAdded'],
   setup(props, { emit }) {
+    const collectionRepository = inject<ICollectionRepository>('collectionRepository')
+
+    if (!collectionRepository) {
+      throw new Error('Repository is not provided')
+    }
+
     const name = ref('')
     const description = ref('')
     const visible = ref(props.modelValue)
@@ -39,11 +47,14 @@ export default defineComponent({
       }
     )
 
-    const addCollection = () => {
+    const addCollection = async () => {
       if (name.value && description.value) {
-        // Logic to add collection
-        emit('collectionAdded')
-        closeDialog()
+        const newCollection = await collectionRepository.createCollection(
+          name.value,
+          description.value
+        )
+        emit('collectionAdded', newCollection)
+        emit('update:modelValue', false)
       }
     }
 
@@ -57,5 +68,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped></style>

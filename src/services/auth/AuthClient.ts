@@ -10,7 +10,7 @@ import {
   ResendOtpRequest,
   ResetPasswordRequest
 } from '@/services/models/authModels'
-import { Response } from '@/services/models/responseModels'
+import { Response } from '@/services/models/baseModels'
 
 export class AuthClient implements IAuthClient {
   constructor(private httpClient: IHttpClient) {}

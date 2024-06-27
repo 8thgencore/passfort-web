@@ -1,24 +1,28 @@
 import { Collection, CollectionFactory } from '@/domain/collection'
 import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
 import { ICollectionClient } from '@/services/collection/ICollectionClient'
-import {
-  CreateCollectionRequest,
-  UpdateCollectionRequest,
-  CollectionResponse
-} from '@/services/models/collectionModels'
+import { PaginationOptions } from '@/services/models/baseModels'
+import { CollectionRequest, CollectionResponse } from '@/services/models/collectionModels'
 
 export class CollectionRepository implements ICollectionRepository {
   constructor(private collectionClient: ICollectionClient) {}
 
-  async createCollection(description: string, name: string): Promise<Collection> {
-    const request: CreateCollectionRequest = { description, name }
+  async createCollection(name: string, description: string): Promise<Collection> {
+    const request: CollectionRequest = { name, description }
     const response: CollectionResponse = await this.collectionClient.createCollection(request)
     return CollectionFactory.createFromDto(response)
   }
 
-  async getCollections(): Promise<Collection[]> {
-    const response: CollectionResponse[] = await this.collectionClient.getCollections()
-    return response.map(CollectionFactory.createFromDto)
+  async getCollections(data: PaginationOptions): Promise<Collection[]> {
+    const response: CollectionResponse[] = await this.collectionClient.getCollections({
+      limit: data.limit,
+      skip: data.skip
+    })
+    if (response != null) {
+      return response.map(CollectionFactory.createFromDto)
+    } else {
+      return []
+    }
   }
 
   async getCollectionById(collectionId: string): Promise<Collection> {
@@ -28,10 +32,10 @@ export class CollectionRepository implements ICollectionRepository {
 
   async updateCollection(
     collectionId: string,
-    description: string,
-    name: string
+    name: string,
+    description: string
   ): Promise<Collection> {
-    const request: UpdateCollectionRequest = { description, name }
+    const request: CollectionRequest = { name, description }
     const response: CollectionResponse = await this.collectionClient.updateCollection(
       collectionId,
       request

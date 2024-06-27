@@ -1,38 +1,48 @@
 import { HttpClient } from '@/services/http/HttpClient'
 import { ICollectionClient } from './ICollectionClient'
 import {
-  CreateCollectionRequest,
-  UpdateCollectionRequest,
-  CollectionResponse
+  CollectionRequest,
+  CollectionResponse,
+  CollectionsResponse
 } from '@/services/models/collectionModels'
+import { PaginationOptions } from '../models/baseModels'
+import { Response } from '@/services/models/baseModels'
 
 export class CollectionClient implements ICollectionClient {
   constructor(private httpClient: HttpClient) {}
 
-  async createCollection(data: CreateCollectionRequest): Promise<CollectionResponse> {
-    const response = await this.httpClient.post<CollectionResponse>('/collections', data)
-    return response
+  async createCollection(data: CollectionRequest): Promise<CollectionResponse> {
+    const response = await this.httpClient.post<Response<CollectionResponse>>('/collections', data)
+    return response.data
   }
 
-  async getCollections(): Promise<CollectionResponse[]> {
-    const response = await this.httpClient.get<CollectionResponse[]>('/collections/me')
-    return response
+  async getCollections(data: PaginationOptions): Promise<CollectionResponse[]> {
+    const params = new URLSearchParams()
+    params.append('limit', data.limit.toString())
+    params.append('skip', data.skip.toString())
+
+    const response = await this.httpClient.get<Response<CollectionsResponse>>(
+      `/collections/me?${params.toString()}`
+    )
+    return response.data.collections
   }
 
   async getCollectionById(collectionId: string): Promise<CollectionResponse> {
-    const response = await this.httpClient.get<CollectionResponse>(`/collections/${collectionId}`)
-    return response
+    const response = await this.httpClient.get<Response<CollectionResponse>>(
+      `/collections/${collectionId}`
+    )
+    return response.data
   }
 
   async updateCollection(
     collectionId: string,
-    data: UpdateCollectionRequest
+    data: CollectionRequest
   ): Promise<CollectionResponse> {
-    const response = await this.httpClient.put<CollectionResponse>(
+    const response = await this.httpClient.put<Response<CollectionResponse>>(
       `/collections/${collectionId}`,
       data
     )
-    return response
+    return response.data
   }
 
   async deleteCollection(collectionId: string): Promise<void> {

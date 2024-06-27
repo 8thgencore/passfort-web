@@ -1,62 +1,40 @@
 <template>
   <v-container>
-    <v-navigation-drawer app>
+    <v-navigation-drawer app v-model="drawer" permanent>
       <collection-list
+        ref="collectionListComponent"
         :collections="collections as Collection[]"
         @collectionSelected="selectCollection"
-        @addCollection="openCreateCollectionDialog"
+        @loadMoreCollections="loadCollections"
       />
+      <v-list-item
+        @click="openCreateCollectionDialog"
+        class="add-collection"
+        style="position: absolute; bottom: 0; width: 100%"
+      >
+        <v-list-item-content>
+          <v-list-item-title> <v-icon left>mdi-plus</v-icon> Add Collection </v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
     </v-navigation-drawer>
     <v-main>
       <v-container>
         <collection-detail
           v-if="selectedCollection"
           :collection="selectedCollection as Collection"
-          @collectionUpdated="loadCollections"
         />
       </v-container>
     </v-main>
 
-    <!-- Dialog for creating master password -->
-    <v-dialog v-model="showMasterPasswordDialog" max-width="500px" persistent>
-      <v-card>
-        <v-card-title>Create Master Password</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="masterPassword"
-            label="Master Password"
-            type="password"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="createMasterPassword">Create</v-btn>
-          <v-btn @click="closeMasterPasswordDialog">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- Dialog for activating master password -->
-    <v-dialog v-model="showActivateMasterPasswordDialog" max-width="500px" persistent>
-      <v-card>
-        <v-card-title>Activate Master Password</v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="masterPassword"
-            label="Master Password"
-            type="password"
-          ></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn color="primary" @click="activateMasterPassword">Activate</v-btn>
-          <v-btn @click="closeActivateMasterPasswordDialog">Cancel</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <!-- Dialog for add collection -->
+    <!-- Dialogs -->
+    <create-master-password-dialog v-model="showMasterPasswordDialog" @close="loadCollections" />
+    <activate-master-password-dialog
+      v-model="showActivateMasterPasswordDialog"
+      @close="loadCollections"
+    />
     <add-collection-dialog
       v-model="isCreateCollectionDialogVisible"
-      @collectionAdded="loadCollections"
+      @collectionAdded="handleCollectionAdded"
     />
   </v-container>
 </template>
@@ -67,16 +45,22 @@ import { useRouter } from 'vue-router'
 import CollectionList from '@/app/pages/collection/CollectionList.vue'
 import CollectionDetail from '@/app/pages/collection/CollectionDetail.vue'
 import AddCollectionDialog from '@/app/pages/collection/AddCollectionDialog.vue'
+import CreateMasterPasswordDialog from '@/app/pages/master-password/CreateMasterPasswordDialog.vue'
+import ActivateMasterPasswordDialog from '@/app/pages/master-password/ActivateMasterPasswordDialog.vue'
 import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
 import { IMasterPasswordRepository } from '@/repositories/interfaces/IMasterPasswordRepository'
 import { Collection } from '@/domain/collection'
 import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
+import { getErrorMessage } from '@/utils/errorHandler'
+import { AxiosError } from 'axios'
 
 export default defineComponent({
   components: {
     CollectionList,
     CollectionDetail,
-    AddCollectionDialog
+    AddCollectionDialog,
+    CreateMasterPasswordDialog,
+    ActivateMasterPasswordDialog
   },
   setup() {
     const userRepository = inject<IUserRepository>('userRepository')
@@ -88,6 +72,13 @@ export default defineComponent({
       throw new Error('Repository is not provided')
     }
 
+    const collections = ref<Collection[]>([])
+    const selectedCollection = ref<Collection | null>(null)
+    const skip = ref(1)
+    const limit = 10
+    const isFetching = ref(false)
+    const allCollectionLoaded = ref(false)
+
     const user = ref({
       email: '',
       name: '',
@@ -96,12 +87,11 @@ export default defineComponent({
       createdAt: new Date(),
       updatedAt: new Date()
     })
-    const collections = ref<Collection[]>([])
-    const selectedCollection = ref<Collection | null>(null)
     const showMasterPasswordDialog = ref(false)
     const showActivateMasterPasswordDialog = ref(false)
-    const masterPassword = ref('')
     const isCreateCollectionDialogVisible = ref(false)
+    const drawer = ref(true)
+    const mini = ref(false)
 
     const loadUserData = async () => {
       try {
@@ -116,36 +106,32 @@ export default defineComponent({
     }
 
     const loadCollections = async () => {
+      if (isFetching.value || allCollectionLoaded.value) return
+      isFetching.value = true
       try {
-        collections.value = await collectionRepository.getCollections()
+        const newCollections = await collectionRepository.getCollections({
+          limit,
+          skip: skip.value
+        })
+        console.log('newCollections.length ', newCollections.length)
+        console.log('limit ', limit)
+        if (newCollections.length < limit) {
+          allCollectionLoaded.value = true
+        }
+        collections.value.push(...newCollections)
+        skip.value += 1
       } catch (error) {
-        console.error('Failed to load collections', error)
-        // TODO:
-        // if (error.message === 'master password validation has expired') {
-        //   showActivateMasterPasswordDialog.value = true
-        // } else {
-        //   console.error('Failed to load collections', error)
-        // }
-      }
-    }
-
-    const createMasterPassword = async () => {
-      try {
-        await masterPasswordRepository.createMasterPassword(masterPassword.value)
-        showMasterPasswordDialog.value = false
-        loadCollections()
-      } catch (error) {
-        console.error('Failed to create master password', error)
-      }
-    }
-
-    const activateMasterPassword = async () => {
-      try {
-        await masterPasswordRepository.activateMasterPassword(masterPassword.value)
-        showActivateMasterPasswordDialog.value = false
-        loadCollections()
-      } catch (error) {
-        console.error('Failed to activate master password', error)
+        if (error instanceof AxiosError) {
+          if (getErrorMessage(error) === 'master password validation has expired') {
+            showActivateMasterPasswordDialog.value = true
+          } else {
+            console.error('Failed to load collections', error)
+          }
+        } else {
+          console.error('Failed to load collections', error)
+        }
+      } finally {
+        isFetching.value = false
       }
     }
 
@@ -165,26 +151,39 @@ export default defineComponent({
       isCreateCollectionDialogVisible.value = true
     }
 
+    const handleCollectionAdded = (newCollection: Collection) => {
+      collections.value.unshift(newCollection)
+    }
+
     onMounted(() => {
       loadUserData()
+      loadCollections()
     })
 
     return {
-      user,
       collections,
       selectedCollection,
       showMasterPasswordDialog,
       showActivateMasterPasswordDialog,
-      masterPassword,
       loadCollections,
-      createMasterPassword,
-      activateMasterPassword,
       closeMasterPasswordDialog,
       closeActivateMasterPasswordDialog,
       selectCollection,
       openCreateCollectionDialog,
-      isCreateCollectionDialogVisible
+      isCreateCollectionDialogVisible,
+      drawer,
+      mini,
+      handleCollectionAdded
     }
   }
 })
 </script>
+
+<style>
+.add-collection {
+  background-color: rgb(var(--v-theme-surface));
+  padding: 16px;
+  border-top: 1px solid #ddd;
+  position: absolute;
+}
+</style>

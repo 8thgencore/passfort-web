@@ -1,11 +1,10 @@
-export interface CreateCollectionRequest {
+export interface CollectionRequest {
   description: string
   name: string
 }
 
-export interface UpdateCollectionRequest {
-  description: string
-  name: string
+export interface CollectionsResponse {
+  collections: CollectionResponse[]
 }
 
 export interface CollectionResponse {

@@ -1,7 +1,7 @@
 import { UserResponse } from '../models/userModels'
 import { IUserClient } from './IUserClient'
 import { IHttpClient } from '../http/IHttpClient'
-import { Response } from '@/services/models/responseModels'
+import { Response } from '@/services/models/baseModels'
 
 export class UserClient implements IUserClient {
   constructor(private httpClient: IHttpClient) {}
