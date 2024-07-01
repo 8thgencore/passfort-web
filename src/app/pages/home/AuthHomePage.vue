@@ -7,13 +7,12 @@
         @collectionSelected="selectCollection"
         @loadMoreCollections="loadCollections"
       />
-      <v-list-item
-        @click="openCreateCollectionDialog"
-        class="add-collection"
-        style="position: absolute; bottom: 0; width: 100%"
-      >
+      <v-list-item @click="openCreateCollectionDialog" class="add-collection">
         <v-list-item-content>
-          <v-list-item-title> <v-icon left>mdi-plus</v-icon> Add Collection </v-list-item-title>
+          <v-list-item-title>
+            <v-icon left>mdi-plus</v-icon>
+            Add Collection
+          </v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
@@ -22,6 +21,8 @@
         <collection-detail
           v-if="selectedCollection"
           :collection="selectedCollection as Collection"
+          @collectionUpdated="handleCollectionUpdated"
+          @collectionDeleted="handleCollectionDeleted"
         />
       </v-container>
     </v-main>
@@ -91,7 +92,6 @@ export default defineComponent({
     const showActivateMasterPasswordDialog = ref(false)
     const isCreateCollectionDialogVisible = ref(false)
     const drawer = ref(true)
-    const mini = ref(false)
 
     const loadUserData = async () => {
       try {
@@ -113,8 +113,6 @@ export default defineComponent({
           limit,
           skip: skip.value
         })
-        console.log('newCollections.length ', newCollections.length)
-        console.log('limit ', limit)
         if (newCollections.length < limit) {
           allCollectionLoaded.value = true
         }
@@ -155,6 +153,27 @@ export default defineComponent({
       collections.value.unshift(newCollection)
     }
 
+    const handleCollectionUpdated = (updatedCollection: Collection) => {
+      const index = collections.value.findIndex(
+        (collection) => collection.id.value === updatedCollection.id.value
+      )
+      if (index !== -1) {
+        collections.value.splice(index, 1, updatedCollection)
+        if (selectedCollection.value && selectedCollection.value.id === updatedCollection.id) {
+          selectedCollection.value = updatedCollection
+        }
+      }
+    }
+
+    const handleCollectionDeleted = (deletedCollectionId: string) => {
+      collections.value = collections.value.filter(
+        (collection) => collection.id.value !== deletedCollectionId
+      )
+      if (selectedCollection.value && selectedCollection.value.id.value === deletedCollectionId) {
+        selectedCollection.value = null
+      }
+    }
+
     onMounted(() => {
       loadUserData()
       loadCollections()
@@ -172,8 +191,9 @@ export default defineComponent({
       openCreateCollectionDialog,
       isCreateCollectionDialogVisible,
       drawer,
-      mini,
-      handleCollectionAdded
+      handleCollectionAdded,
+      handleCollectionUpdated,
+      handleCollectionDeleted
     }
   }
 })
@@ -185,5 +205,7 @@ export default defineComponent({
   padding: 16px;
   border-top: 1px solid #ddd;
   position: absolute;
+  bottom: 0;
+  width: 100%;
 }
 </style>

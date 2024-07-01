@@ -31,7 +31,6 @@ export default defineComponent({
   emits: ['update:modelValue', 'collectionAdded'],
   setup(props, { emit }) {
     const collectionRepository = inject<ICollectionRepository>('collectionRepository')
-
     if (!collectionRepository) {
       throw new Error('Repository is not provided')
     }
@@ -49,19 +48,23 @@ export default defineComponent({
 
     const addCollection = async () => {
       if (name.value && description.value) {
-        const newCollection = await collectionRepository.createCollection(
-          name.value,
-          description.value
-        )
-        emit('collectionAdded', newCollection)
-        emit('update:modelValue', false)
+        try {
+          const newCollection = await collectionRepository.createCollection(
+            name.value,
+            description.value
+          )
+          emit('collectionAdded', newCollection)
+          closeDialog()
+        } catch (error) {
+          console.error('Failed to add collection', error)
+        }
       }
     }
 
     const closeDialog = () => {
-      emit('update:modelValue', false)
       name.value = ''
       description.value = ''
+      emit('update:modelValue', false)
     }
 
     return { name, description, visible, addCollection, closeDialog }
