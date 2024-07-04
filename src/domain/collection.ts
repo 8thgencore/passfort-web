@@ -5,8 +5,8 @@ import { CollectionResponse } from '@/services/models/collectionModels'
 export class Collection extends BaseEntity {
   constructor(
     id: EntityId,
-    public readonly name: string,
-    public readonly description: string,
+    public name: string,
+    public description: string,
     public readonly createdBy: string,
     public readonly updatedBy: string,
     public readonly createdAt: Date,

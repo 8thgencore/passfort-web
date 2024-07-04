@@ -14,7 +14,7 @@
       <div v-if="editMode">
         <v-text-field v-model="name" label="Name"></v-text-field>
         <v-textarea v-model="description" label="Description"></v-textarea>
-        <v-btn color="primary" @click="updateCollection">Save</v-btn>
+        <v-btn color="primary mr-2" @click="updateCollection">Save</v-btn>
         <v-btn @click="cancelEdit">Cancel</v-btn>
       </div>
       <div v-else>
@@ -23,6 +23,7 @@
     </v-card-text>
   </v-card>
 </template>
+
 <script lang="ts">
 import { defineComponent, PropType, ref, watch, inject } from 'vue'
 import { Collection } from '@/domain/collection'
@@ -64,6 +65,8 @@ export default defineComponent({
             name.value,
             description.value
           )
+          props.collection.name = updatedCollection.name
+          props.collection.description = updatedCollection.description
           emit('collectionUpdated', updatedCollection)
           editMode.value = false
         } catch (error) {
@@ -75,7 +78,7 @@ export default defineComponent({
     const deleteCollection = async () => {
       try {
         await collectionRepository.deleteCollection(props.collection.id.value)
-        emit('collectionDeleted', props.collection.id)
+        emit('collectionDeleted', props.collection.id.value)
       } catch (error) {
         console.error('Failed to delete collection', error)
       }
@@ -110,14 +113,9 @@ export default defineComponent({
   margin: 0 auto;
 }
 
-.ml-2 {
-  margin-left: 8px;
-}
 .v-card-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
-
-
 </style>

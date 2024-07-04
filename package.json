@@ -20,12 +20,12 @@
     "sass": "^1.77.6",
     "sass-loader": "^14.2.1",
     "vite-plugin-vuetify": "^2.0.3",
-    "vue": "^3.4.30",
+    "vue": "^3.4.31",
     "vue-router": "^4.4.0",
-    "vuetify": "^3.6.10"
+    "vuetify": "^3.6.11"
   },
   "devDependencies": {
-    "@eslint/js": "^9.5.0",
+    "@eslint/js": "^9.6.0",
     "@rushstack/eslint-patch": "^1.10.3",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^20.14.9",
@@ -35,16 +35,16 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/tsconfig": "^0.5.1",
     "autoprefixer": "^10.4.19",
-    "eslint": "^9.5.0",
-    "eslint-plugin-vue": "^9.26.0",
-    "globals": "^15.6.0",
-    "npm-run-all2": "^6.2.0",
+    "eslint": "^9.6.0",
+    "eslint-plugin-vue": "^9.27.0",
+    "globals": "^15.8.0",
+    "npm-run-all2": "^6.2.2",
     "prettier": "^3.3.2",
-    "typescript": "~5.5.2",
-    "vite": "^5.3.1",
+    "typescript": "~5.5.3",
+    "vite": "^5.3.3",
     "vite-plugin-pages": "^0.32.3",
-    "vite-plugin-vue-devtools": "^7.3.4",
+    "vite-plugin-vue-devtools": "^7.3.5",
     "vite-plugin-vue-layouts": "^0.11.0",
-    "vue-tsc": "^2.0.22"
+    "vue-tsc": "^2.0.26"
   }
 }

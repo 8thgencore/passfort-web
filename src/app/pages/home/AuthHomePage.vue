@@ -16,16 +16,14 @@
         </v-list-item-content>
       </v-list-item>
     </v-navigation-drawer>
-    <v-main>
-      <v-container>
-        <collection-detail
-          v-if="selectedCollection"
-          :collection="selectedCollection as Collection"
-          @collectionUpdated="handleCollectionUpdated"
-          @collectionDeleted="handleCollectionDeleted"
-        />
-      </v-container>
-    </v-main>
+    <v-container>
+      <collection-detail
+        v-if="selectedCollection"
+        :collection="selectedCollection as Collection"
+        @collectionUpdated="handleCollectionUpdated"
+        @collectionDeleted="handleCollectionDeleted"
+      />
+    </v-container>
 
     <!-- Dialogs -->
     <create-master-password-dialog v-model="showMasterPasswordDialog" @close="loadCollections" />
