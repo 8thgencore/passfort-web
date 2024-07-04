@@ -19,6 +19,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch, inject } from 'vue'
 import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
+import { showErrorNotification } from '@/utils/notificationService'
 
 export default defineComponent({
   name: 'AddCollectionDialog',
@@ -47,6 +48,11 @@ export default defineComponent({
     )
 
     const addCollection = async () => {
+      if (name.value.length == 0 || description.value.length == 0) {
+        showErrorNotification('Error', 'All fields must be filled in')
+        return
+      }
+
       if (name.value && description.value) {
         try {
           const newCollection = await collectionRepository.createCollection(
