@@ -18,6 +18,8 @@ import { MasterPasswordClient } from './services/master-password/MasterPasswordC
 import { MasterPasswordRepository } from './repositories/MasterPasswordRepository'
 import { CollectionClient } from './services/collection/CollectionClient'
 import { CollectionRepository } from './repositories/CollectionRepository'
+import { SecretClient } from './services/secret/SecretClient'
+import { SecretRepository } from './repositories/SecretRepository'
 
 // Creating a Vue Application instance
 const app = createApp(App)
@@ -37,12 +39,14 @@ const authClient = new AuthClient(httpClient)
 const userClient = new UserClient(httpClient)
 const masterPasswordClient = new MasterPasswordClient(httpClient)
 const collectionClient = new CollectionClient(httpClient)
+const secretClient = new SecretClient(httpClient)
 
 // Creating an instance of the authentication repository
 const authRepository = new AuthRepository(authClient, authStore)
 const userRepository = new UserRepository(userClient)
 const masterPasswordRepository = new MasterPasswordRepository(masterPasswordClient)
 const collectionRepository = new CollectionRepository(collectionClient)
+const secretRepository = new SecretRepository(secretClient)
 
 // Installing interceptors for processing HTTP requests and responses
 setupInterceptors(httpClient.instance, authRepository)
@@ -56,6 +60,7 @@ app.provide('authRepository', authRepository)
 app.provide('userRepository', userRepository)
 app.provide('masterPasswordRepository', masterPasswordRepository)
 app.provide('collectionRepository', collectionRepository)
+app.provide('secretRepository', secretRepository)
 
 // Creating and using router with authRepository
 const router = createAppRouter(authRepository)
