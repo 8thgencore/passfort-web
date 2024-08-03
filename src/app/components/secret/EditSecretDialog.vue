@@ -7,7 +7,6 @@
         <v-form>
           <v-text-field v-model="name" label="Name" />
           <v-text-field v-model="description" label="Description" />
-          <v-select v-model="secretType" label="Secret Type" :items="secretTypes" />
           <v-text-field v-model="secretValue" label="Secret Value" />
         </v-form>
       </v-card-text>
@@ -20,26 +19,44 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watch } from 'vue'
+import { Secret } from '@/domain/secret'
 
 export default defineComponent({
   props: {
     secret: {
-      type: Object,
+      type: Object as () => Secret | null,
       required: true
     }
   },
   setup(props, { emit }) {
     const dialog = ref(true)
-    const name = ref(props.secret.name)
-    const description = ref(props.secret.description)
-    const secretType = ref(props.secret.secret_type)
-    const secretValue = ref(props.secret.secret_value)
-    const secretTypes = ref(['text', 'password'])
+    const name = ref('')
+    const description = ref('')
+    const secretType = ref('')
+    const secretValue = ref('')
+
+    // Watch for changes in the secret prop and update local state accordingly
+    watch(
+      () => props.secret,
+      (newSecret) => {
+        if (newSecret) {
+          name.value = newSecret.name
+          description.value = newSecret.description
+          secretType.value = newSecret.secretType
+          secretValue.value =
+            newSecret.secretType === 'password'
+              ? (newSecret.passwordSecret?.password ?? '')
+              : (newSecret.textSecret?.text ?? '')
+        }
+      },
+      { immediate: true }
+    )
 
     const editSecret = () => {
       emit('update:dialog', false)
       emit('edit-secret', {
+        ...props.secret,
         name: name.value,
         description: description.value,
         secretType: secretType.value,
@@ -57,7 +74,6 @@ export default defineComponent({
       description,
       secretType,
       secretValue,
-      secretTypes,
       editSecret,
       cancel
     }
