@@ -16,4 +16,5 @@ export interface Secret {
   created_by: string
   updated_at: string
   updated_by: string
+  show: boolean
 }

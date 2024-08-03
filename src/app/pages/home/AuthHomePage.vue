@@ -41,9 +41,9 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, inject } from 'vue'
 import { useRouter } from 'vue-router'
-import CollectionList from '@/app/pages/collection/CollectionList.vue'
-import CollectionDetail from '@/app/pages/collection/CollectionDetail.vue'
-import AddCollectionDialog from '@/app/pages/collection/AddCollectionDialog.vue'
+import CollectionList from '@/app/components/collection/CollectionList.vue'
+import CollectionDetail from '@/app/components/collection/CollectionDetail.vue'
+import AddCollectionDialog from '@/app/components/collection/AddCollectionDialog.vue'
 import CreateMasterPasswordDialog from '@/app/pages/master-password/CreateMasterPasswordDialog.vue'
 import ActivateMasterPasswordDialog from '@/app/pages/master-password/ActivateMasterPasswordDialog.vue'
 import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
@@ -73,7 +73,7 @@ export default defineComponent({
 
     const collections = ref<Collection[]>([])
     const selectedCollection = ref<Collection | null>(null)
-    const skip = ref(1)
+    const skip = ref(0)
     const limit = 10
     const isFetching = ref(false)
     const allCollectionLoaded = ref(false)
@@ -115,7 +115,7 @@ export default defineComponent({
           allCollectionLoaded.value = true
         }
         collections.value.push(...newCollections)
-        skip.value += 1
+        skip.value += limit
       } catch (error) {
         if (error instanceof AxiosError) {
           if (getErrorMessage(error) === 'master password validation has expired') {

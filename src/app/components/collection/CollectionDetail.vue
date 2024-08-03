@@ -1,36 +1,42 @@
 <template>
-  <v-card class="collection-card">
-    <v-card-title class="d-flex align-center justify-space-between">
-      <span>{{ collection.name }}</span>
-      <v-spacer></v-spacer>
-      <v-btn icon @click="toggleEditMode">
-        <v-icon>mdi-pencil</v-icon>
-      </v-btn>
-      <v-btn icon @click="deleteCollection" class="ml-2">
-        <v-icon color="red">mdi-delete</v-icon>
-      </v-btn>
-    </v-card-title>
-    <v-card-text>
-      <div v-if="editMode">
-        <v-text-field v-model="name" label="Name"></v-text-field>
-        <v-textarea v-model="description" label="Description"></v-textarea>
-        <v-btn color="primary mr-2" @click="updateCollection">Save</v-btn>
-        <v-btn @click="cancelEdit">Cancel</v-btn>
-      </div>
-      <div v-else>
-        <p>{{ collection.description }}</p>
-      </div>
-    </v-card-text>
-  </v-card>
+  <div>
+    <v-card class="collection-card mb-4">
+      <v-card-title class="d-flex align-center justify-space-between">
+        <span>{{ collection.name }}</span>
+        <v-spacer></v-spacer>
+        <v-btn icon @click="toggleEditMode">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+        <v-btn icon @click="deleteCollection" class="ml-2">
+          <v-icon color="red">mdi-delete</v-icon>
+        </v-btn>
+      </v-card-title>
+      <v-card-text>
+        <div v-if="editMode">
+          <v-text-field v-model="name" label="Name"></v-text-field>
+          <v-textarea v-model="description" label="Description"></v-textarea>
+          <v-btn color="primary mr-2" @click="updateCollection">Save</v-btn>
+          <v-btn @click="cancelEdit">Cancel</v-btn>
+        </div>
+        <div v-else>
+          <p>{{ collection.description }}</p>
+        </div>
+      </v-card-text>
+    </v-card>
+    <h3 class="text-h5 font-weight-bold mb-4">Secrets</h3>
+    <SecretList :collection-id="collection.id.value"/>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, ref, watch, inject } from 'vue'
 import { Collection } from '@/domain/collection'
 import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
+import SecretList from '@/app/components/secret/SecretList.vue'
 
 export default defineComponent({
   name: 'CollectionDetail',
+  components: { SecretList },
   props: {
     collection: {
       type: Object as PropType<Collection>,
