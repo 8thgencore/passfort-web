@@ -10,7 +10,10 @@ import {
 export interface ISecretClient {
   listSecrets(collectionId: string, skip?: number, limit?: number): Promise<SecretResponse[]>
   createTextSecret(collectionId: string, secret: CreateTextSecretRequest): Promise<SecretResponse>
-  createPasswordSecret(collectionId: string, secret: CreatePasswordSecretRequest): Promise<SecretResponse>
+  createPasswordSecret(
+    collectionId: string,
+    secret: CreatePasswordSecretRequest
+  ): Promise<SecretResponse>
   getSecret(collectionId: string, secretId: string): Promise<SecretResponse>
   updateTextSecret(
     collectionId: string,

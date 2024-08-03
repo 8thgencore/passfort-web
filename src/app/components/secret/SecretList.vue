@@ -1,6 +1,6 @@
 <template>
   <v-card class="mb-4">
-    <v-btn color="primary" @click="openAddDialog">Add Secret</v-btn>
+    <v-btn class="ma-4 mb-0" color="primary" @click="openAddDialog">Add Secret</v-btn>
     <v-list>
       <v-list-item v-for="secret in secrets" :key="secret.id.value" class="mb-2">
         <div class="d-flex justify-space-between pa-2 mb-2">
@@ -14,18 +14,18 @@
             <v-list-item-subtitle class="text--secondary mr-4">{{
               secret.secretType
             }}</v-list-item-subtitle>
-            <v-list-item-action>
+            <v-list-item-action class="mr-2">
               <v-btn icon @click.stop="toggleSecret(secret)">
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
             </v-list-item-action>
-            <v-list-item-action>
+            <v-list-item-action class="mr-2">
               <v-btn icon @click.stop="openEditDialog(secret)">
                 <v-icon>mdi-pencil</v-icon>
               </v-btn>
             </v-list-item-action>
             <v-list-item-action>
-              <v-btn icon @click.stop="deleteSecret(secret.id)">
+              <v-btn icon @click.stop="deleteSecret(secret)">
                 <v-icon>mdi-delete</v-icon>
               </v-btn>
             </v-list-item-action>
@@ -42,11 +42,13 @@
     <!-- Dialogs -->
     <add-secret-dialog
       v-model="showAddDialog"
+      @update:dialog="showAddDialog = $event"
       @add-secret="handleAddSecret"
       :collection-id="collectionId"
     />
     <edit-secret-dialog
       v-model="showEditDialog"
+      @update:dialog="showEditDialog = $event"
       :secret="selectedSecret"
       @edit-secret="handleEditSecret"
     />
@@ -54,13 +56,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject, watch } from 'vue'
+import { defineComponent, ref, inject, watch, Ref } from 'vue'
 import { Secret } from '@/domain/secret'
 import { ISecretRepository } from '@/repositories/interfaces/ISecretRepository'
 import SecretDetails from '@/app/components/secret/SecretDetails.vue'
 import AddSecretDialog from '@/app/components/secret/AddSecretDialog.vue'
 import EditSecretDialog from '@/app/components/secret/EditSecretDialog.vue'
-import { EntityId } from '@/domain/common/entityId'
 
 export default defineComponent({
   name: 'SecretList',
@@ -83,7 +84,7 @@ export default defineComponent({
     const limit = 10
     const showAddDialog = ref(false)
     const showEditDialog = ref(false)
-    const selectedSecret = ref<Secret | null>(null)
+    const selectedSecret = ref<Secret | null>(null) as Ref<Secret | null>
 
     const loadSecrets = async () => {
       try {
@@ -149,10 +150,10 @@ export default defineComponent({
       }
     }
 
-    const deleteSecret = async (secretId: EntityId) => {
+    const deleteSecret = async (secret: Secret) => {
       try {
-        await secretRepository.deleteSecret(props.collectionId, secretId.value)
-        const index = secrets.value.findIndex((s) => s.id.equals(secretId))
+        await secretRepository.deleteSecret(props.collectionId, secret.id.value)
+        const index = secrets.value.findIndex((s) => s.id.equals(secret.id))
         if (index !== -1) {
           secrets.value.splice(index, 1)
         }

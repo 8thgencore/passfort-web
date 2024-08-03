@@ -14,7 +14,11 @@ import { Response } from '@/services/models/baseModels'
 export class SecretClient implements ISecretClient {
   constructor(private httpClient: HttpClient) {}
 
-  async listSecrets(collectionId: string, skip?: number, limit?: number): Promise<SecretResponse[]> {
+  async listSecrets(
+    collectionId: string,
+    skip?: number,
+    limit?: number
+  ): Promise<SecretResponse[]> {
     const params = new URLSearchParams()
     if (skip) params.append('skip', skip.toString())
     if (limit) params.append('limit', limit.toString())
@@ -25,7 +29,10 @@ export class SecretClient implements ISecretClient {
     return response.data.secrets
   }
 
-  async createTextSecret(collectionId: string, secret: CreateTextSecretRequest): Promise<SecretResponse> {
+  async createTextSecret(
+    collectionId: string,
+    secret: CreateTextSecretRequest
+  ): Promise<SecretResponse> {
     const response = await this.httpClient.post<Response<SecretResponse>>(
       `/collections/${collectionId}/secrets`,
       secret

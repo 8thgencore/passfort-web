@@ -4,10 +4,10 @@ import { PasswordResponse, SecretResponse, TextResponse } from '@/services/model
 
 export class Secret extends BaseEntity {
   constructor(
-    id: EntityId,
+    public id: EntityId,
     public name: string,
     public description: string,
-    public collectionId: EntityId,
+    public collectionId: string,
     public secretType: 'password' | 'text',
     public readonly createdAt: Date,
     public readonly createdBy: string,
@@ -39,11 +39,12 @@ export class SecretFactory {
     const textSecret = dto.text_secret
       ? TextSecretFactory.createFromDto(dto.text_secret)
       : undefined
+
     return new Secret(
       new EntityId(dto.id),
       dto.name,
       dto.description,
-      new EntityId(dto.collection_id),
+      dto.collection_id,
       dto.secret_type as 'password' | 'text',
       new Date(dto.created_at),
       dto.created_by,
