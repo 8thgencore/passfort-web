@@ -24,7 +24,7 @@
       </v-card-text>
     </v-card>
     <h3 class="text-h5 font-weight-bold mb-4">Secrets</h3>
-    <SecretList :collection-id="collection.id.value"/>
+    <secret-list :collection-id="collection.id.value" />
   </div>
 </template>
 

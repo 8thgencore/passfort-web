@@ -20,6 +20,18 @@
                 <v-icon>mdi-eye</v-icon>
               </v-btn>
             </v-list-item-action>
+
+            <v-list-item-action>
+              <v-btn icon @click.stop="editSecret(secret)">
+                <v-icon>mdi-pencil</v-icon>
+              </v-btn>
+            </v-list-item-action>
+
+            <v-list-item-action>
+              <v-btn icon @click.stop="deleteSecret(secret)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </v-list-item-action>
           </div>
         </div>
         <template v-if="secret.show">
@@ -30,6 +42,11 @@
     </v-list>
     <v-btn v-if="!allSecretsLoaded" color="primary" @click="loadMoreSecrets">Load More</v-btn>
   </v-card>
+
+      <!-- Dialogs -->
+<add-secret-dialog />
+<edit-secret-dialog />
+
 </template>
 
 <script lang="ts">
@@ -37,6 +54,8 @@ import { defineComponent, ref, inject, watch } from 'vue'
 import { Secret } from '@/domain/secret'
 import { ISecretRepository } from '@/repositories/interfaces/ISecretRepository'
 import SecretDetails from '@/app/components/secret/SecretDetails.vue'
+import AddSecretDialog from '@/app/components/secret/AddSecretDialog.vue'
+import EditSecretDialog from '@/app/components/secret/EditSecretDialog.vue'
 
 export default defineComponent({
   name: 'SecretList',
@@ -57,6 +76,17 @@ export default defineComponent({
     const secrets = ref<Secret[]>([])
     const skip = ref(0)
     const limit = 10
+
+    watch(
+      () => props.collectionId,
+      () => {
+        secrets.value = []
+        skip.value = 0
+        allSecretsLoaded.value = true
+        loadSecrets()
+      },
+      { immediate: true }
+    )
 
     const loadSecrets = async () => {
       try {
@@ -83,17 +113,6 @@ export default defineComponent({
       }
     }
 
-    watch(
-      () => props.collectionId,
-      () => {
-        secrets.value = []
-        skip.value = 0
-        allSecretsLoaded.value = true
-        loadSecrets()
-      },
-      { immediate: true }
-    )
-
     const toggleSecret = async (secret: Secret) => {
       if (!secret.show) {
         try {
@@ -116,12 +135,83 @@ export default defineComponent({
       await loadSecrets()
     }
 
+    const addSecret = async () => {
+      // Открываем диалоговое окно для добавления секрета
+      const dialogRef = await dialogService.open(AddSecretDialog, {
+        props: {
+          collectionId: props.collectionId
+        }
+      })
+
+      // Если пользователь подтвердил добавление секрета
+      if (dialogRef.data) {
+        try {
+          const newSecret = await secretRepository.addSecret(
+            props.collectionId,
+            dialogRef.data.name,
+            dialogRef.data.description,
+            dialogRef.data.secretType,
+            dialogRef.data.secretValue
+          )
+
+          secrets.value.push(newSecret)
+        } catch (error) {
+          console.error('Failed to add secret', error)
+        }
+      }
+    }
+
+    const editSecret = async (secret: Secret) => {
+      // Открываем диалоговое окно для редактирования секрета
+      const dialogRef = await dialogService.open(EditSecretDialog, {
+        props: {
+          secret: secret
+        }
+      })
+
+      // Если пользователь подтвердил редактирование секрета
+      if (dialogRef.data) {
+        try {
+          const updatedSecret = await secretRepository.updateSecret(
+            props.collectionId,
+            secret.id,
+            dialogRef.data.name,
+            dialogRef.data.description,
+            dialogRef.data.secretType,
+            dialogRef.data.secretValue
+          )
+
+          const index = secrets.value.findIndex((s) => s.id === secret.id)
+          if (index !== -1) {
+            secrets.value.splice(index, 1, updatedSecret)
+          }
+        } catch (error) {
+          console.error('Failed to update secret', error)
+        }
+      }
+    }
+
+    const deleteSecret = async (secret: Secret) => {
+      try {
+        await secretRepository.deleteSecret(props.collectionId, secret.id)
+        const index = secrets.value.findIndex((s) => s.id === secret.id)
+        if (index !== -1) {
+          secrets.value.splice(index, 1)
+        }
+      } catch (error) {
+        console.error('Failed to delete secret', error)
+      }
+    }
+
     loadSecrets()
 
     return {
       secrets,
       loadMoreSecrets,
       toggleSecret,
+      addSecret,
+      editSecret,
+      deleteSecret,
       allSecretsLoaded
     }
   }
