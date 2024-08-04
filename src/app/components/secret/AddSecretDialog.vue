@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent>
+  <v-dialog v-model="dialog" max-width="500px" persistent>
     <v-card>
       <v-card-title>Add Secret</v-card-title>
       <v-card-text>
@@ -7,7 +7,15 @@
           <v-text-field v-model="name" label="Name" />
           <v-text-field v-model="description" label="Description" />
           <v-select v-model="secretType" label="Secret Type" :items="secretTypes" />
-          <v-text-field v-model="secretValue" label="Secret Value" />
+          <v-text-field v-if="secretType === 'text'" v-model="textSecret" label="Text" />
+          <v-text-field v-if="secretType === 'password'" v-model="url" label="URL" />
+          <v-text-field v-if="secretType === 'password'" v-model="login" label="Login" />
+          <v-text-field
+            v-if="secretType === 'password'"
+            v-model="password"
+            label="Password"
+            type="password"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -19,6 +27,7 @@
 </template>
 
 <script lang="ts">
+import { SecretType } from '@/domain/secretType'
 import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
@@ -33,21 +42,45 @@ export default defineComponent({
     const name = ref('')
     const description = ref('')
     const secretType = ref('')
-    const secretValue = ref('')
+    const textSecret = ref('')
+    const url = ref('')
+    const login = ref('')
+    const password = ref('')
     const secretTypes = ref(['text', 'password'])
 
     const addSecret = () => {
-      emit('update:dialog', false)
-      emit('add-secret', {
+      const secretData: any = {
         name: name.value,
         description: description.value,
-        secretType: secretType.value,
-        secretValue: secretValue.value
-      })
+        secretType: secretType.value
+      }
+
+      if (secretType.value === SecretType.TEXT) {
+        secretData.textSecret = textSecret.value
+      } else if (secretType.value === SecretType.PASSWORD) {
+        secretData.url = url.value
+        secretData.login = login.value
+        secretData.password = password.value
+      }
+
+      emit('add-secret', secretData)
+      clearFields()
+      emit('update:dialog', false)
     }
 
     const cancel = () => {
+      clearFields()
       emit('update:dialog', false)
+    }
+
+    const clearFields = () => {
+      name.value = ''
+      description.value = ''
+      secretType.value = ''
+      textSecret.value = ''
+      url.value = ''
+      login.value = ''
+      password.value = ''
     }
 
     return {
@@ -55,7 +88,10 @@ export default defineComponent({
       name,
       description,
       secretType,
-      secretValue,
+      textSecret,
+      url,
+      login,
+      password,
       secretTypes,
       addSecret,
       cancel

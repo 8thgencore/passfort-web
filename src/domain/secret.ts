@@ -1,14 +1,12 @@
-import { BaseEntity } from './common/baseEntity'
-import { EntityId } from './common/entityId'
 import { PasswordResponse, SecretResponse, TextResponse } from '@/services/models/secretModels'
 
-export class Secret extends BaseEntity {
+export class Secret {
   constructor(
-    public id: EntityId,
+    public id: string,
     public name: string,
     public description: string,
     public collectionId: string,
-    public secretType: 'password' | 'text',
+    public secretType: SecretType.PASSWORD | SecretType.TEXT,
     public readonly createdAt: Date,
     public readonly createdBy: string,
     public readonly updatedAt: Date,
@@ -23,8 +21,6 @@ export class Secret extends BaseEntity {
     },
     public show?: boolean
   ) {
-    super(id)
-
     if (!name || !description) {
       throw new Error('Name and description must not be empty')
     }
@@ -41,11 +37,11 @@ export class SecretFactory {
       : undefined
 
     return new Secret(
-      new EntityId(dto.id),
+      dto.id,
       dto.name,
       dto.description,
       dto.collection_id,
-      dto.secret_type as 'password' | 'text',
+      dto.secret_type as SecretType.PASSWORD | SecretType.TEXT,
       new Date(dto.created_at),
       dto.created_by,
       new Date(dto.updated_at),

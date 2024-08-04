@@ -2,7 +2,7 @@
   <v-card class="mb-4">
     <v-btn class="ma-4 mb-0" color="primary" @click="openAddDialog">Add Secret</v-btn>
     <v-list>
-      <v-list-item v-for="secret in secrets" :key="secret.id.value" class="mb-2">
+      <v-list-item v-for="secret in secrets" :key="secret.id" class="mb-2">
         <div class="d-flex justify-space-between pa-2 mb-2">
           <v-list-item-content class="justify-start">
             <v-list-item-title class="font-weight-bold">{{ secret.name }}</v-list-item-title>
@@ -62,6 +62,7 @@ import { ISecretRepository } from '@/repositories/interfaces/ISecretRepository'
 import SecretDetails from '@/app/components/secret/SecretDetails.vue'
 import AddSecretDialog from '@/app/components/secret/AddSecretDialog.vue'
 import EditSecretDialog from '@/app/components/secret/EditSecretDialog.vue'
+import { SecretType } from '@/domain/secretType'
 
 export default defineComponent({
   name: 'SecretList',
@@ -108,13 +109,10 @@ export default defineComponent({
     const toggleSecret = async (secret: Secret) => {
       if (!secret.show) {
         try {
-          const detailedSecret = await secretRepository.getSecret(
-            props.collectionId,
-            secret.id.value
-          )
-          if (detailedSecret.secretType === 'text') {
+          const detailedSecret = await secretRepository.getSecret(props.collectionId, secret.id)
+          if (detailedSecret.secretType === SecretType.TEXT) {
             secret.textSecret = detailedSecret.textSecret
-          } else if (detailedSecret.secretType === 'password') {
+          } else if (detailedSecret.secretType === SecretType.PASSWORD) {
             secret.passwordSecret = detailedSecret.passwordSecret
           }
           secret.show = true
@@ -140,11 +138,13 @@ export default defineComponent({
     }
 
     const handleAddSecret = async (newSecret: Secret) => {
+
+
       secrets.value.push(newSecret)
     }
 
     const handleEditSecret = async (updatedSecret: Secret) => {
-      const index = secrets.value.findIndex((s) => s.id.equals(updatedSecret.id))
+      const index = secrets.value.findIndex((s) => s.id == updatedSecret.id)
       if (index !== -1) {
         secrets.value.splice(index, 1, updatedSecret)
       }
@@ -152,8 +152,8 @@ export default defineComponent({
 
     const deleteSecret = async (secret: Secret) => {
       try {
-        await secretRepository.deleteSecret(props.collectionId, secret.id.value)
-        const index = secrets.value.findIndex((s) => s.id.equals(secret.id))
+        await secretRepository.deleteSecret(props.collectionId, secret.id)
+        const index = secrets.value.findIndex((s) => s.id == secret.id)
         if (index !== -1) {
           secrets.value.splice(index, 1)
         }

@@ -1,13 +1,21 @@
 <!-- EditSecretDialog.vue -->
 <template>
-  <v-dialog v-model="dialog" persistent>
+  <v-dialog v-model="dialog" max-width="500px" persistent>
     <v-card>
       <v-card-title>Edit Secret</v-card-title>
       <v-card-text>
         <v-form>
           <v-text-field v-model="name" label="Name" />
           <v-text-field v-model="description" label="Description" />
-          <v-text-field v-model="secretValue" label="Secret Value" />
+          <v-text-field v-if="secretType === 'text'" v-model="textSecret" label="Text" />
+          <v-text-field v-if="secretType === 'password'" v-model="url" label="URL" />
+          <v-text-field v-if="secretType === 'password'" v-model="login" label="Login" />
+          <v-text-field
+            v-if="secretType === 'password'"
+            v-model="password"
+            label="Password"
+            type="password"
+          />
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -21,6 +29,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue'
 import { Secret } from '@/domain/secret'
+import { SecretType } from '@/domain/secretType'
 
 export default defineComponent({
   props: {
@@ -34,7 +43,10 @@ export default defineComponent({
     const name = ref('')
     const description = ref('')
     const secretType = ref('')
-    const secretValue = ref('')
+    const textSecret = ref('')
+    const url = ref('')
+    const login = ref('')
+    const password = ref('')
 
     // Watch for changes in the secret prop and update local state accordingly
     watch(
@@ -44,24 +56,38 @@ export default defineComponent({
           name.value = newSecret.name
           description.value = newSecret.description
           secretType.value = newSecret.secretType
-          secretValue.value =
-            newSecret.secretType === 'password'
-              ? (newSecret.passwordSecret?.password ?? '')
-              : (newSecret.textSecret?.text ?? '')
+          if (newSecret.secretType === SecretType.PASSWORD) {
+            url.value = newSecret.passwordSecret?.url ?? ''
+            login.value = newSecret.passwordSecret?.login ?? ''
+            password.value = newSecret.passwordSecret?.password ?? ''
+          } else {
+            textSecret.value = newSecret.textSecret?.text ?? ''
+          }
         }
       },
       { immediate: true }
     )
 
     const editSecret = () => {
-      emit('update:dialog', false)
-      emit('edit-secret', {
+      const secretData: any = {
         ...props.secret,
         name: name.value,
         description: description.value,
-        secretType: secretType.value,
-        secretValue: secretValue.value
-      })
+        secretType: secretType.value
+      }
+
+      if (secretType.value === SecretType.TEXT) {
+        secretData.textSecret = { text: textSecret.value }
+      } else if (secretType.value === SecretType.PASSWORD) {
+        secretData.passwordSecret = {
+          url: url.value,
+          login: login.value,
+          password: password.value
+        }
+      }
+
+      emit('edit-secret', secretData)
+      emit('update:dialog', false)
     }
 
     const cancel = () => {
@@ -73,7 +99,10 @@ export default defineComponent({
       name,
       description,
       secretType,
-      secretValue,
+      textSecret,
+      url,
+      login,
+      password,
       editSecret,
       cancel
     }
