@@ -4,16 +4,16 @@
     <v-list>
       <v-list-item v-for="secret in secrets" :key="secret.id" class="mb-2">
         <div class="d-flex justify-space-between pa-2 mb-2">
-          <v-list-item-content class="justify-start">
+          <div class="v-list-item__content justify-start">
             <v-list-item-title class="font-weight-bold">{{ secret.name }}</v-list-item-title>
-            <v-list-item-subtitle class="text--secondary">{{
-              secret.description
-            }}</v-list-item-subtitle>
-          </v-list-item-content>
+            <v-list-item-subtitle class="text--secondary">
+              {{ secret.description }}
+            </v-list-item-subtitle>
+          </div>
           <div class="d-flex align-center justify-end">
-            <v-list-item-subtitle class="text--secondary mr-4">{{
-              secret.secretType
-            }}</v-list-item-subtitle>
+            <v-list-item-subtitle class="text--secondary mr-4">
+              {{ secret.secretType }}
+            </v-list-item-subtitle>
             <v-list-item-action class="mr-2">
               <v-btn icon @click.stop="toggleSecret(secret)">
                 <v-icon>mdi-eye</v-icon>

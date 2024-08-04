@@ -8,12 +8,12 @@
         @loadMoreCollections="loadCollections"
       />
       <v-list-item @click="openCreateCollectionDialog" class="add-collection">
-        <v-list-item-content>
+        <v-list-item>
           <v-list-item-title>
             <v-icon left>mdi-plus</v-icon>
             Add Collection
           </v-list-item-title>
-        </v-list-item-content>
+        </v-list-item>
       </v-list-item>
     </v-navigation-drawer>
     <v-container>
@@ -199,8 +199,6 @@ export default defineComponent({
 
 <style>
 .add-collection {
-  background-color: rgb(var(--v-theme-surface));
-  padding: 16px;
   border-top: 1px solid #ddd;
   position: absolute;
   bottom: 0;
