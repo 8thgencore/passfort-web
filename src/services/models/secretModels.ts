@@ -1,14 +1,16 @@
+import { SecretType } from "@/domain/secretType"
+
 export interface CreateTextSecretRequest {
   name: string
   description: string
-  secret_type: 'text'
+  secret_type: SecretType.TEXT
   text: string
 }
 
 export interface CreatePasswordSecretRequest {
   name: string
   description: string
-  secret_type: 'password'
+  secret_type: SecretType.PASSWORD
   url: string
   login: string
   password: string
@@ -17,14 +19,14 @@ export interface CreatePasswordSecretRequest {
 export interface UpdateTextSecretRequest {
   name: string
   description: string
-  secret_type: 'text'
+  secret_type: SecretType.TEXT
   text: string
 }
 
 export interface UpdatePasswordSecretRequest {
   name: string
   description: string
-  secret_type: 'password'
+  secret_type: SecretType.PASSWORD
   url: string
   login: string
   password: string

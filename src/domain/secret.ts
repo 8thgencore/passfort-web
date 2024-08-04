@@ -1,4 +1,5 @@
 import { PasswordResponse, SecretResponse, TextResponse } from '@/services/models/secretModels'
+import { SecretType } from './secretType'
 
 export class Secret {
   constructor(

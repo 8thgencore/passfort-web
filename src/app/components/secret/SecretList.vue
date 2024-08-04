@@ -37,7 +37,9 @@
         <v-divider v-if="secret !== secrets[secrets.length - 1]" />
       </v-list-item>
     </v-list>
-    <v-btn v-if="!allSecretsLoaded" color="primary" @click="loadMoreSecrets">Load More</v-btn>
+    <v-btn v-if="!allSecretsLoaded" class="ma-4" color="primary" @click="loadMoreSecrets">
+      Load More
+    </v-btn>
 
     <!-- Dialogs -->
     <add-secret-dialog
@@ -63,6 +65,12 @@ import SecretDetails from '@/app/components/secret/SecretDetails.vue'
 import AddSecretDialog from '@/app/components/secret/AddSecretDialog.vue'
 import EditSecretDialog from '@/app/components/secret/EditSecretDialog.vue'
 import { SecretType } from '@/domain/secretType'
+import {
+  CreateTextSecretRequest,
+  CreatePasswordSecretRequest,
+  UpdateTextSecretRequest,
+  UpdatePasswordSecretRequest
+} from '@/services/models/secretModels'
 
 export default defineComponent({
   name: 'SecretList',
@@ -137,16 +145,70 @@ export default defineComponent({
       showEditDialog.value = true
     }
 
-    const handleAddSecret = async (newSecret: Secret) => {
-
-
-      secrets.value.push(newSecret)
+    const handleAddSecret = async (newSecret: any) => {
+      try {
+        let createdSecret: Secret
+        if (newSecret.secretType === 'text') {
+          const request: CreateTextSecretRequest = {
+            name: newSecret.name,
+            description: newSecret.description,
+            secret_type: newSecret.secretType,
+            text: newSecret.textSecret
+          }
+          createdSecret = await secretRepository.createTextSecret(props.collectionId, request)
+        } else {
+          const request: CreatePasswordSecretRequest = {
+            name: newSecret.name,
+            description: newSecret.description,
+            secret_type: newSecret.secretType,
+            url: newSecret.url,
+            login: newSecret.login,
+            password: newSecret.password
+          }
+          createdSecret = await secretRepository.createPasswordSecret(props.collectionId, request)
+        }
+        secrets.value = [createdSecret, ...secrets.value]
+      } catch (error) {
+        console.error('Failed to add secret', error)
+      }
     }
 
-    const handleEditSecret = async (updatedSecret: Secret) => {
-      const index = secrets.value.findIndex((s) => s.id == updatedSecret.id)
-      if (index !== -1) {
-        secrets.value.splice(index, 1, updatedSecret)
+    const handleEditSecret = async (updatedSecret: any) => {
+      try {
+        let editedSecret: Secret
+        if (updatedSecret.secretType === 'text') {
+          const request: UpdateTextSecretRequest = {
+            name: updatedSecret.name,
+            description: updatedSecret.description,
+            secret_type: updatedSecret.secretType,
+            text: updatedSecret.textSecret.text
+          }
+          editedSecret = await secretRepository.updateTextSecret(
+            props.collectionId,
+            updatedSecret.id,
+            request
+          )
+        } else {
+          const request: UpdatePasswordSecretRequest = {
+            name: updatedSecret.name,
+            description: updatedSecret.description,
+            secret_type: updatedSecret.secretType,
+            url: updatedSecret.passwordSecret.url,
+            login: updatedSecret.passwordSecret.login,
+            password: updatedSecret.passwordSecret.password
+          }
+          editedSecret = await secretRepository.updatePasswordSecret(
+            props.collectionId,
+            updatedSecret.id,
+            request
+          )
+        }
+        const index = secrets.value.findIndex((s) => s.id == editedSecret.id)
+        if (index !== -1) {
+          secrets.value.splice(index, 1, editedSecret)
+        }
+      } catch (error) {
+        console.error('Failed to edit secret', error)
       }
     }
 
@@ -161,8 +223,6 @@ export default defineComponent({
         console.error('Failed to delete secret', error)
       }
     }
-
-    loadSecrets()
 
     watch(
       () => props.collectionId,

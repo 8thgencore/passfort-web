@@ -7,10 +7,10 @@ import {
 } from '@/services/models/secretModels'
 
 export interface ISecretRepository {
+  getSecret(collectionId: string, secretId: string): Promise<Secret>
   listSecrets(collectionId: string, skip?: number, limit?: number): Promise<Secret[]>
   createTextSecret(collectionId: string, secret: CreateTextSecretRequest): Promise<Secret>
   createPasswordSecret(collectionId: string, secret: CreatePasswordSecretRequest): Promise<Secret>
-  getSecret(collectionId: string, secretId: string): Promise<Secret>
   updateTextSecret(
     collectionId: string,
     secretId: string,
