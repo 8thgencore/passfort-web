@@ -1,6 +1,6 @@
 import { IAuthClient } from '@/services/auth/IAuthClient'
 import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
-import { IAuthStore } from '@/store/modules/auth/interfaces/IAuthStore'
+import { IAuthStore } from '@/store/auth/interfaces/IAuthStore'
 
 export class AuthRepository implements IAuthRepository {
   constructor(
@@ -26,7 +26,7 @@ export class AuthRepository implements IAuthRepository {
       await this.authClient.logout()
       this.authStore.clearTokens()
     } catch (e) {
-      console.log('failed to logout on the server')
+      console.log('failed to logout on the server', e)
     }
     this.authStore.clearTokens()
   }

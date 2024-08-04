@@ -1,4 +1,4 @@
-import { SecretType } from "@/domain/secretType"
+import { SecretType } from '@/domain/secretType'
 
 export interface CreateTextSecretRequest {
   name: string

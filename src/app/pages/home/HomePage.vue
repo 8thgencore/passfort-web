@@ -6,21 +6,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, inject } from 'vue'
-import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
+import { defineComponent } from 'vue'
 import AuthHomePage from './AuthHomePage.vue'
 import UnauthHomePage from './UnauthHomePage.vue'
+import useUser from '@/composables/useUser'
 
 export default defineComponent({
   name: 'HomePage',
   components: { AuthHomePage, UnauthHomePage },
   setup() {
-    const authRepository = inject<IAuthRepository>('authRepository')
-    if (!authRepository) {
-      throw new Error('authRepository is not provided')
-    }
-
-    const isAuthenticated = computed(() => authRepository.isAuthenticated())
+    const { isAuthenticated } = useUser()
 
     return { isAuthenticated }
   }

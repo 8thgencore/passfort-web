@@ -1,4 +1,3 @@
-import { Secret } from '@/domain/secret'
 import {
   CreatePasswordSecretRequest,
   CreateTextSecretRequest,

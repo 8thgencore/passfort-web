@@ -1,6 +1,7 @@
 <template>
   <v-list class="collection-list">
     <v-list-item
+      class="collection-item"
       v-for="collection in collections"
       :key="collection.id.toString()"
       @click="handleCollectionSelected(collection)"
@@ -21,7 +22,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { PropType, defineComponent } from 'vue'
 import { Collection } from '@/domain/collection'
 
 export default defineComponent({
@@ -49,3 +50,9 @@ export default defineComponent({
   }
 })
 </script>
+
+<style>
+.load-more {
+  margin-bottom: 40px;
+}
+</style>

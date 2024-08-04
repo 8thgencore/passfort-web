@@ -1,7 +1,8 @@
 <template>
   <v-container>
     <v-navigation-drawer app v-model="drawer" permanent>
-      <collection-list
+      <CollectionList
+        :key="collections.length"
         ref="collectionListComponent"
         :collections="collections as Collection[]"
         @collectionSelected="selectCollection"
@@ -17,7 +18,7 @@
       </v-list-item>
     </v-navigation-drawer>
     <v-container>
-      <collection-detail
+      <CollectionDetail
         v-if="selectedCollection"
         :collection="selectedCollection as Collection"
         @collectionUpdated="handleCollectionUpdated"
@@ -26,12 +27,12 @@
     </v-container>
 
     <!-- Dialogs -->
-    <create-master-password-dialog v-model="showMasterPasswordDialog" @close="loadCollections" />
-    <activate-master-password-dialog
+    <CreateMasterPasswordDialog v-model="showMasterPasswordDialog" @close="loadCollections" />
+    <ActivateMasterPasswordDialog
       v-model="showActivateMasterPasswordDialog"
       @close="loadCollections"
     />
-    <add-collection-dialog
+    <AddCollectionDialog
       v-model="isCreateCollectionDialogVisible"
       @collectionAdded="handleCollectionAdded"
     />
@@ -40,18 +41,18 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, inject } from 'vue'
-import { useRouter } from 'vue-router'
 import CollectionList from '@/app/components/collection/CollectionList.vue'
 import CollectionDetail from '@/app/components/collection/CollectionDetail.vue'
 import AddCollectionDialog from '@/app/components/collection/AddCollectionDialog.vue'
 import CreateMasterPasswordDialog from '@/app/pages/master-password/CreateMasterPasswordDialog.vue'
 import ActivateMasterPasswordDialog from '@/app/pages/master-password/ActivateMasterPasswordDialog.vue'
-import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
-import { IMasterPasswordRepository } from '@/repositories/interfaces/IMasterPasswordRepository'
-import { Collection } from '@/domain/collection'
 import { ICollectionRepository } from '@/repositories/interfaces/ICollectionRepository'
+import { IMasterPasswordRepository } from '@/repositories/interfaces/IMasterPasswordRepository'
+import { useRouter } from 'vue-router'
+import { Collection } from '@/domain/collection'
 import { getErrorMessage } from '@/utils/errorHandler'
 import { AxiosError } from 'axios'
+import useUser from '@/composables/useUser'
 
 export default defineComponent({
   components: {
@@ -62,45 +63,31 @@ export default defineComponent({
     ActivateMasterPasswordDialog
   },
   setup() {
-    const userRepository = inject<IUserRepository>('userRepository')
     const masterPasswordRepository = inject<IMasterPasswordRepository>('masterPasswordRepository')
     const collectionRepository = inject<ICollectionRepository>('collectionRepository')
     const router = useRouter()
 
-    if (!userRepository || !masterPasswordRepository || !collectionRepository) {
+    if (!masterPasswordRepository || !collectionRepository) {
       throw new Error('Repository is not provided')
     }
 
+    const { isSetMasterPassword } = useUser()
+
+    const drawer = ref(true)
+
     const collections = ref<Collection[]>([])
     const selectedCollection = ref<Collection | null>(null)
+    const isCreateCollectionDialogVisible = ref<boolean>(false)
     const skip = ref(0)
     const limit = 10
     const isFetching = ref(false)
     const allCollectionLoaded = ref(false)
 
-    const user = ref({
-      email: '',
-      name: '',
-      role: '',
-      master_password_set: false,
-      createdAt: new Date(),
-      updatedAt: new Date()
-    })
     const showMasterPasswordDialog = ref(false)
     const showActivateMasterPasswordDialog = ref(false)
-    const isCreateCollectionDialogVisible = ref(false)
-    const drawer = ref(true)
 
-    const loadUserData = async () => {
-      try {
-        const userData = await userRepository.getUserInfo()
-        user.value = userData
-        if (!user.value.master_password_set) {
-          showMasterPasswordDialog.value = true
-        }
-      } catch (error) {
-        console.error('Failed to load user data', error)
-      }
+    const checkMasterPassword = async () => {
+      showMasterPasswordDialog.value = !isSetMasterPassword
     }
 
     const loadCollections = async () => {
@@ -131,14 +118,6 @@ export default defineComponent({
       }
     }
 
-    const closeMasterPasswordDialog = () => {
-      router.back()
-    }
-
-    const closeActivateMasterPasswordDialog = () => {
-      router.back()
-    }
-
     const selectCollection = (collection: Collection) => {
       selectedCollection.value = collection
     }
@@ -153,7 +132,7 @@ export default defineComponent({
 
     const handleCollectionUpdated = (updatedCollection: Collection) => {
       const index = collections.value.findIndex(
-        (collection) => collection.id.value === updatedCollection.id.value
+        (collection) => collection.id === updatedCollection.id
       )
       if (index !== -1) {
         collections.value.splice(index, 1, updatedCollection)
@@ -172,12 +151,22 @@ export default defineComponent({
       }
     }
 
+    // MasterPassword
+    const closeMasterPasswordDialog = () => {
+      router.back()
+    }
+
+    const closeActivateMasterPasswordDialog = () => {
+      router.back()
+    }
+
     onMounted(() => {
-      loadUserData()
+      checkMasterPassword()
       loadCollections()
     })
 
     return {
+      drawer,
       collections,
       selectedCollection,
       showMasterPasswordDialog,
@@ -188,7 +177,6 @@ export default defineComponent({
       selectCollection,
       openCreateCollectionDialog,
       isCreateCollectionDialogVisible,
-      drawer,
       handleCollectionAdded,
       handleCollectionUpdated,
       handleCollectionDeleted
@@ -199,6 +187,7 @@ export default defineComponent({
 
 <style>
 .add-collection {
+  background-color: rgb(var(--v-theme-surface));
   border-top: 1px solid #ddd;
   position: absolute;
   bottom: 0;

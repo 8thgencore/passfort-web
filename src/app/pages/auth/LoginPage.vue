@@ -26,29 +26,22 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, inject } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
 import { Routes } from '@/app/router'
+import useUser from '@/composables/useUser'
 
 export default defineComponent({
   setup() {
-    const authRepository = inject<IAuthRepository>('authRepository')
-    if (!authRepository) {
-      throw new Error('authRepository is not provided')
-    }
+    const { login } = useUser()
 
     const email = ref('')
     const password = ref('')
     const router = useRouter()
 
     const onSubmit = async () => {
-      try {
-        await authRepository.login(email.value, password.value)
-        router.push({ name: Routes.Home })
-      } catch (error) {
-        console.error('Login failed', error)
-      }
+      await login(email.value, password.value)
+      router.push({ name: Routes.Home })
     }
 
     const goToForgotPassword = () => {
@@ -59,7 +52,3 @@ export default defineComponent({
   }
 })
 </script>
-
-<style scoped>
-/* Добавьте стиль по вашему желанию */
-</style>

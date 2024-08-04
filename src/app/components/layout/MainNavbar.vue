@@ -27,7 +27,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="green darken-1" string @click="dialog = false">Cancel</v-btn>
-          <v-btn color="green darken-1" string @click="logout">Logout</v-btn>
+          <v-btn color="green darken-1" string @click="logoutUser">Logout</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -36,52 +36,27 @@
 
 <script lang="ts">
 import { Routes } from '@/app/router'
-import { IAuthRepository } from '@/repositories/interfaces/IAuthRepository'
-import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
-import { defineComponent, computed, inject, ref, onMounted } from 'vue'
+import { defineComponent, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import useThemeSwitcher from '@/composables/useThemeSwitcher'
+import useUser from '@/composables/useUser'
 
 export default defineComponent({
   setup() {
-    const authRepository = inject<IAuthRepository>('authRepository')
-    if (!authRepository) {
-      throw new Error('authRepository is not provided')
-    }
-    const userRepository = inject<IUserRepository>('userRepository')
-    if (!userRepository) {
-      throw new Error('userRepository is not provided')
-    }
+    const { isDarkTheme, toggleTheme } = useThemeSwitcher()
+    const { username, isAuthenticated, loadUserData, logout } = useUser()
 
     const router = useRouter()
-
     const dialog = ref(false)
-
-    const isAuthenticated = computed(() => authRepository.isAuthenticated())
-    const username = ref('')
-
-    const loadUserData = async () => {
-      try {
-        const userData = await userRepository.getUserInfo()
-        username.value = userData.name
-      } catch (error) {
-        console.error('Failed to load user data', error)
-      }
-    }
 
     const openConfirmationDialog = () => {
       dialog.value = true
     }
 
-    const logout = async () => {
-      try {
-        await authRepository.logout()
-        router.push({ name: Routes.Home })
-      } catch (error) {
-        console.error('Logout failed', error)
-      } finally {
-        dialog.value = false
-      }
+    const logoutUser = async () => {
+      await logout()
+      dialog.value = false
+      router.push({ name: Routes.Home })
     }
 
     const goToHome = () => {
@@ -92,9 +67,6 @@ export default defineComponent({
       router.push({ name: Routes.Profile })
     }
 
-    // Toggle theme
-    const { isDarkTheme, toggleTheme } = useThemeSwitcher()
-
     onMounted(() => {
       if (isAuthenticated.value) {
         loadUserData()
@@ -103,7 +75,7 @@ export default defineComponent({
 
     return {
       isAuthenticated,
-      logout,
+      logoutUser,
       dialog,
       openConfirmationDialog,
       goToHome,
@@ -123,6 +95,7 @@ export default defineComponent({
 }
 
 .logo-container {
+  cursor: pointer;
   display: flex;
   align-items: center;
 }

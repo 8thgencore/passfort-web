@@ -97,29 +97,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, inject } from 'vue'
+import { defineComponent, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { IUserRepository } from '@/repositories/interfaces/IUserRepository'
 import { Routes } from '@/app/router'
+import useUser from '@/composables/useUser'
 
 export default defineComponent({
   setup() {
-    const userRepository = inject<IUserRepository>('userRepository')
-    if (!userRepository) {
-      throw new Error('userRepository is not provided')
-    }
+    const { user, loadUserData } = useUser()
 
-    const user = ref({ email: '', name: '', role: '' })
     const router = useRouter()
-
-    const loadUserData = async () => {
-      try {
-        const userData = await userRepository.getUserInfo()
-        user.value = userData
-      } catch (error) {
-        console.error('Failed to load user data', error)
-      }
-    }
 
     const goToChangePassword = () => {
       router.push({ name: Routes.ChangePassword })
