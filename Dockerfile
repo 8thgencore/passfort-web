@@ -20,7 +20,7 @@ FROM nginx:stable-alpine
 COPY --from=build /dist /usr/share/nginx/html
 COPY --from=build nginx/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose port 80 (the default HTTP port) instead of 3000
+# Expose port 80
 EXPOSE 80
 
 # Run Nginx with the daemon off
