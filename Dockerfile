@@ -1,5 +1,5 @@
 # Use an official Node.js image as the base for the build stage
-FROM node:alpine as build
+FROM node:22-alpine3.19 as build
 
 # Copy only the package.json file to the container to take advantage of Docker's caching
 COPY package*.json ./
